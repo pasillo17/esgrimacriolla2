@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import RevealOnScroll from './RevealOnScroll';
 
 interface MerchProps {
@@ -8,15 +9,19 @@ interface MerchProps {
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Remera "Facón"',
-    price: '$24.000',
-    image: 'https://i.imgur.com/k42sH57.jpeg',
-    description: 'Algodón 100% peinado. Estampa frontal con diseño de facón cruzado. Ideal para entrenamiento ligero o uso casual.',
+    name: 'Remera "Juan Moreira"',
+    price: '4.000',
+    images: [
+      'https://i.imgur.com/Yf8taGR.jpeg',
+      'https://i.imgur.com/lglJcJo.jpeg',
+      'https://i.imgur.com/02WkVzL.jpeg'
+    ],
+    description: 'Algodón 100% peinado. Estampa exclusiva de Juan Moreira. Ideal para entrenamiento ligero o uso casual.',
     sizes: ['S', 'M', 'L', 'XL'],
     link: 'https://www.mercadolibre.com.ar',
     code: 'IND-001',
     specs: ['Algodón 24/1', 'Estampa Serigrafía', 'Corte Regular'],
-    stockLabel: 'ÚLTIMAS 12 UNIDADES'
+    stockLabel: 'NUEVO INGRESO'
   },
   {
     id: 5,
@@ -31,6 +36,43 @@ const PRODUCTS = [
     stockLabel: 'NUEVO INGRESO'
   }
 ];
+
+
+const ProductGallery: React.FC<{ images: string[], alt: string }> = ({ images, alt }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <div className="absolute inset-0 w-full h-full">
+      <AnimatePresence initial={false} mode="wait">
+        <motion.img
+          key={currentIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+          src={images[currentIndex]}
+          alt={`${alt} - vista ${currentIndex + 1}`}
+          className="absolute inset-0 w-full h-full object-cover filter sepia-[0.3] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
+        />
+      </AnimatePresence>
+      {images.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+          {images.map((_, i) => (
+            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentIndex ? 'bg-gold' : 'bg-white/30'}`} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Merch: React.FC<MerchProps> = ({ onBack }) => {
   return (
@@ -71,11 +113,15 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
                 
                 {/* Immersive Image Container */}
                 <div className="relative w-full md:w-3/5 aspect-[4/5] md:aspect-square overflow-hidden border border-gold/20 shadow-2xl z-10 rounded-sm">
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    className="absolute inset-0 w-full h-full object-cover filter sepia-[0.3] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
-                  />
+                  {product.images ? (
+                    <ProductGallery images={product.images} alt={product.name} />
+                  ) : (
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="absolute inset-0 w-full h-full object-cover filter sepia-[0.3] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
+                    />
+                  )}
                   {/* Aggressive Overlay for Mobile */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent md:hidden opacity-50"></div>
                   <div className="absolute inset-0 bg-gold/5 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700"></div>

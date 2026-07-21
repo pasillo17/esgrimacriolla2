@@ -10,30 +10,35 @@ const PRODUCTS = [
   {
     id: 1,
     name: 'Remera "Juan Moreira"',
-    price: '4.000',
+    price: '$24.000 ARS',
     images: [
-      'https://i.imgur.com/Yf8taGR.jpeg',
+      'https://i.imgur.com/02WkVzL.jpeg',
       'https://i.imgur.com/lglJcJo.jpeg',
-      'https://i.imgur.com/02WkVzL.jpeg'
+      'https://i.imgur.com/Yf8taGR.jpeg'
     ],
-    description: 'Algodón 100% peinado. Estampa exclusiva de Juan Moreira. Ideal para entrenamiento ligero o uso casual.',
+    description: '',
     sizes: ['S', 'M', 'L', 'XL'],
     link: 'https://www.mercadolibre.com.ar',
     code: 'IND-001',
-    specs: ['Algodón 24/1', 'Estampa Serigrafía', 'Corte Regular'],
-    stockLabel: 'NUEVO INGRESO'
+    specs: [],
+    stockLabel: 'NUEVO INGRESO',
+    highlightColor: '#0852ce'
   },
   {
-    id: 5,
-    name: 'Remera "Guardapampa"',
-    price: '$24.000',
-    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=2000&auto=format&fit=crop',
-    description: 'Nuestra clásica remera de entrenamiento con detalles de guardapampa en las mangas. Resistencia y tradición.',
-    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    id: 2,
+    name: 'Remera "Juan Moreira"',
+    price: '$24.000 ARS',
+    images: [
+      'https://i.imgur.com/tymB2sh.jpeg',
+      'https://i.imgur.com/S7C7L6r.jpeg'
+    ],
+    description: '',
+    sizes: ['S', 'M', 'L', 'XL'],
     link: 'https://www.mercadolibre.com.ar',
     code: 'IND-002',
-    specs: ['Algodón 24/1', 'Detalles Bordados', 'Corte Deportivo'],
-    stockLabel: 'NUEVO INGRESO'
+    specs: [],
+    stockLabel: 'NUEVO INGRESO',
+    highlightColor: '#f472b6'
   }
 ];
 
@@ -113,11 +118,11 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
                 
                 {/* Immersive Image Container */}
                 <div className="relative w-full md:w-3/5 aspect-[4/5] md:aspect-square overflow-hidden border border-gold/20 shadow-2xl z-10 rounded-sm">
-                  {product.images ? (
+                  {(product.images && product.images.length > 0) ? (
                     <ProductGallery images={product.images} alt={product.name} />
                   ) : (
                     <img 
-                      src={product.image} 
+                      src={product.images[0]} 
                       alt={product.name}
                       className="absolute inset-0 w-full h-full object-cover filter sepia-[0.3] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
                     />
@@ -147,31 +152,37 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
                      <span className="font-display text-[0.6rem] md:text-xs tracking-[0.4em] text-gold uppercase border-b border-gold/30 pb-1">{product.code}</span>
                   </div>
                   
-                  <h3 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-5xl uppercase tracking-[0.1em] mb-1 md:mb-4 leading-[1.2] md:leading-[1.1]">
-                    {product.name.split(' ').map((word, i) => (
-                        <span key={i} className={i === 0 ? "text-stone-100 text-glow-white mr-2 md:block md:mr-0 md:text-gold md:text-glow-gold md:mb-1" : "text-gold text-glow-gold mr-2 md:block md:mr-0 md:text-stone-100 md:text-glow-white"}>
-                          {word.replace(/["']/g, '')}
-                        </span>
-                    ))}
+                  <h3 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-5xl uppercase tracking-[0.1em] mb-1 md:mb-4 leading-[1.2] md:leading-[1.1] text-stone-100">
+                    {product.name.replace(/["']/g, '').split(' ').map((word, i) => {
+                      if (product.highlightColor && word.toUpperCase() !== 'REMERA') {
+                        return <span key={i} style={{ color: product.highlightColor, textShadow: `0 0 10px ${product.highlightColor}80` }} className="drop-shadow-lg">{word} </span>;
+                      }
+                      return <span key={i} className="text-stone-100 text-glow-white">{word} </span>;
+                    })}
                   </h3>
                   
                   <span className="block font-display text-lg sm:text-xl md:text-3xl text-stone-300 tracking-widest font-bold mb-4 md:mb-6">
                     {product.price}
                   </span>
                   
-                  <p className="hidden md:block font-serif text-stone-400 text-sm md:text-base italic mb-8 leading-relaxed">
+                  {product.description && (
+                  <p className="font-serif text-stone-400 text-sm md:text-base italic mb-8 leading-relaxed">
                     {product.description}
                   </p>
+                  )}
 
+                  {product.specs && product.specs.length > 0 && (
                   <div className="hidden md:block space-y-3 mb-10">
-                    {product.specs?.map((spec, i) => (
+                    {product.specs.map((spec, i) => (
                       <div key={i} className="flex items-center gap-4">
                          <div className="w-1.5 h-1.5 bg-gold rotate-45 flex-shrink-0"></div>
                          <span className="font-display text-[0.65rem] md:text-xs uppercase tracking-[0.2em] text-stone-400">{spec}</span>
                       </div>
                     ))}
                   </div>
+                  )}
 
+                  {product.link !== '#' && (
                   <a 
                     href={product.link}
                     target="_blank"
@@ -185,14 +196,29 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
                     </span>
                     <span className="material-icons-outlined relative z-10 group-hover/btn:translate-x-2 transition-transform hidden md:block">shopping_cart</span>
                   </a>
+                  )}
                 </div>
 
               </div>
             </RevealOnScroll>
+
           ))}
         </div>
+
+        {/* Elegant Coming Soon Text */}
+        <RevealOnScroll delay={300}>
+          <div className="max-w-3xl mx-auto mt-24 mb-12 text-center relative">
+            <div className="absolute left-1/2 -top-12 -translate-x-1/2 w-px h-8 bg-gradient-to-b from-transparent to-gold/50"></div>
+            <h3 className="font-serif italic text-2xl md:text-4xl text-stone-300 leading-relaxed font-light">
+              Próximamente más remeras, artículos y libros de esta disciplina gaucha...
+            </h3>
+            <div className="absolute left-1/2 -bottom-12 -translate-x-1/2 w-px h-8 bg-gradient-to-t from-transparent to-gold/50"></div>
+          </div>
+        </RevealOnScroll>
+
       </div>
     </div>
+
   );
 };
 

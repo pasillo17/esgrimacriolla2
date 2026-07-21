@@ -12,7 +12,7 @@ const LOCATIONS = [
     name: 'Sede Zona Sur',
     address: 'Gym ESN, Enrique Fernandez 2066',
     schedule: 'Mar y Jue 8:30hs • Lun y Vie 19:00hs',
-    image: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=2069&auto=format&fit=crop',
+    image: 'https://www.lanus.gob.ar/storage/fichas/imagenes/whatsapp-image-2024-09-24-at-51236-pm-Dlg7w.jpeg',
     instructor: 'Inst. Augusto Miranda',
     mapUrl: 'https://maps.app.goo.gl/vQTk5ugv5eXhjrMt9',
     instagramUrl: 'https://www.instagram.com/agus_esgrimacriolla/' // Cambiar por el Instagram específico de la sede

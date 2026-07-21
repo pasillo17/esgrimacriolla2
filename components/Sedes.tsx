@@ -57,8 +57,8 @@ const LOCATIONS = [
     address: 'Beschett y Moreno (Gimnasio de Bomberos)',
     schedule: 'Martes y Jueves 19:30hs',
     image: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=2076&auto=format&fit=crop',
-    instructor: 'Inst. a confirmar',
-    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Beschett+y+Moreno,+Bariloche',
+    instructor: 'Inst. Walter Medel',
+    mapUrl: 'https://maps.app.goo.gl/PFrZZNDaiDeYAAc19',
     instagramUrl: 'https://www.instagram.com/p_oncho1980/'
   },
   {
@@ -69,7 +69,7 @@ const LOCATIONS = [
     schedule: 'Sábados 18:00hs',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Catedral_desde_el_Lago_Nahuel_Huapi_-_panoramio.jpg/1280px-Catedral_desde_el_Lago_Nahuel_Huapi_-_panoramio.jpg',
     instructor: 'Inst. Ismael Devalle',
-    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Morales+y+Albarracin,+Bariloche',
+    mapUrl: 'https://maps.app.goo.gl/wR2ccySjM5dXHowm7',
     instagramUrl: 'https://www.instagram.com/esgrimacriollabariloche/'
   },
   {

@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html lang="es" class="dark overflow-x-hidden">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Buenas y Santas - Esgrima Criolla</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8B5A2B", // Warm wood/leather brown
+                        gold: "rgb(var(--color-gold) / <alpha-value>)",
+                        "void": "rgb(var(--color-void) / <alpha-value>)",
+                        "divider": "rgb(var(--color-divider) / <alpha-value>)",
+                        "card-depth": "rgb(var(--color-card-depth) / <alpha-value>)",
+                        stone: {
+                            100: "rgb(var(--color-text-100) / <alpha-value>)",
+                            200: "rgb(var(--color-text-200) / <alpha-value>)",
+                            300: "rgb(var(--color-text-300) / <alpha-value>)",
+                            400: "rgb(var(--color-text-400) / <alpha-value>)",
+                            500: "rgb(var(--color-text-500) / <alpha-value>)",
+                            600: "rgb(var(--color-text-600) / <alpha-value>)",
+                            700: "rgb(var(--color-text-700) / <alpha-value>)",
+                            800: "rgb(var(--color-text-800) / <alpha-value>)",
+                            900: "rgb(var(--color-text-900) / <alpha-value>)",
+                        }
+                    },
+                    fontFamily: {
+                        display: ["'Oswald'", "sans-serif"],
+                        serif: ["'Source Serif 4'", "serif"],
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --color-void: 10 7 4;
+            --color-card-depth: 18 11 6;
+            --color-divider: 26 17 8;
+            --color-gold: 197 160 101;
+            
+            --color-text-100: 245 245 244;
+            --color-text-200: 231 229 228;
+            --color-text-300: 214 211 209;
+            --color-text-400: 168 162 158;
+            --color-text-500: 120 113 108;
+            --color-text-600: 87 83 78;
+            --color-text-700: 68 64 60;
+            --color-text-800: 41 37 36;
+            --color-text-900: 28 25 23;
+
+            --bg-paper-rgba: rgba(255, 255, 255, 0.03);
+            --filter-logo: drop-shadow(0 0 30px rgba(92, 64, 51, 0.2));
+            --text-glow-white: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
+            --gold-svg-color: %23C5A065;
+        }
+
+        html.light {
+            --color-void: 222 208 193; /* #F5EBE0 */
+            --color-card-depth: 235 227 217; /* #FCF8F2 */
+            --color-divider: 230 213 195; /* #E6D5C3 */
+            --color-gold: 100 65 30; /* #64411E */
+            
+            --color-text-100: 10 10 10;
+            --color-text-200: 20 20 20;
+            --color-text-300: 30 30 30;
+            --color-text-400: 45 45 45;
+            --color-text-500: 120 113 108;
+            --color-text-600: 168 162 158;
+            --color-text-700: 214 211 209;
+            --color-text-800: 231 229 228;
+            --color-text-900: 245 245 244;
+
+            --bg-paper-rgba: rgba(0, 0, 0, 0.04);
+            --filter-logo: drop-shadow(0 0 30px rgba(154, 123, 79, 0.4));
+            --text-glow-white: none;
+            --gold-svg-color: %2364411E;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgb(var(--color-void)); }
+        ::-webkit-scrollbar-thumb { background: rgb(var(--color-gold)); border-radius: 4px; }
+        ::selection { background: rgb(var(--color-gold)); color: rgb(var(--color-void)); }
+        
+        .vignette-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        html.light .vignette-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(154, 123, 79, 0.15) 100%);
+        }
+
+        .paper-texture {
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--bg-paper-rgba) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--bg-paper-rgba) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .guardapampa-divider {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 4h8v4h6v4h6v6h-6v4h-6v4h-8v-4h-6v-4h-6v-6h6v-4h6v-4z' fill='var(--gold-svg-color)' fill-opacity='1'/%3E%3Crect x='0' y='0' width='60' height='2' fill='var(--gold-svg-color)' fill-opacity='1'/%3E%3Crect x='0' y='28' width='60' height='2' fill='var(--gold-svg-color)' fill-opacity='1'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: center;
+            height: 30px;
+            width: 100%;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        /* We need a clever trick for SVG data URI variables. Since we can't interpolate CSS vars in URL directly, we'll redefine the background image for light mode */
+        html.light .guardapampa-divider {
+             background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 4h8v4h6v4h6v6h-6v4h-6v4h-8v-4h-6v-4h-6v-6h6v-4h6v-4z' fill='%2364411E' fill-opacity='1'/%3E%3Crect x='0' y='0' width='60' height='2' fill='%2364411E' fill-opacity='1'/%3E%3Crect x='0' y='28' width='60' height='2' fill='%2364411E' fill-opacity='1'/%3E%3C/svg%3E");
+        }
+
+        .guardapampa-divider:not(.light) {
+             background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 4h8v4h6v4h6v6h-6v4h-6v4h-8v-4h-6v-4h-6v-6h6v-4h6v-4z' fill='%23C5A065' fill-opacity='1'/%3E%3Crect x='0' y='0' width='60' height='2' fill='%23C5A065' fill-opacity='1'/%3E%3Crect x='0' y='28' width='60' height='2' fill='%23C5A065' fill-opacity='1'/%3E%3C/svg%3E");
+        }
+
+
+        .text-glow-gold {
+            text-shadow: 0 0 15px rgb(var(--color-gold) / 0.4), 0 0 30px rgb(var(--color-gold) / 0.2);
+        }
+
+        .element-glow-gold {
+            box-shadow: 0 0 20px rgb(var(--color-gold) / 0.15), inset 0 0 15px rgb(var(--color-gold) / 0.05);
+        }
+        @keyframes scroll-x {
+            0% { background-position: 0 center; }
+            100% { background-position: 600px center; }
+        }
+        .animate-guardapampa {
+            animation: scroll-x 20s linear infinite;
+        }
+
+        @keyframes revealUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-reveal { animation: revealUp 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-left { animation: slideInLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .animate-slide-right { animation: slideInRight 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-scale-in { animation: scaleIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        .logo-glow {
+            filter: drop-shadow(0 0 30px rgba(92, 64, 51, 0.2));
+        }
+
+        .text-glow-white {
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Floating Dust Particles */
+        .dust-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .dust-particle {
+            position: absolute;
+            background: rgba(197, 160, 101, 0.2);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: float-dust var(--duration) linear infinite;
+            opacity: 0;
+        }
+        @keyframes float-dust {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) translateX(var(--drift)); opacity: 0; }
+        }
+
+        /* Gold Shine Effect */
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        .shine-effect::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 45%,
+                rgba(255, 255, 255, 0.1) 48%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.1) 52%,
+                transparent 55%
+            );
+            transform: rotate(-45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+        .shine-effect:hover::after {
+            opacity: 1;
+            left: 100%;
+            top: 100%;
+        }
+
+        /* Border Glow */
+        .border-glow-hover {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .border-glow-hover:hover {
+            box-shadow: 0 0 20px rgba(197, 160, 101, 0.2);
+            border-color: rgba(197, 160, 101, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Grainy Overlay */
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+            animation: scroll 40s linear infinite;
+        }
+        .animate-scroll:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-void text-stone-300 font-serif antialiased relative overflow-x-hidden paper-texture">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

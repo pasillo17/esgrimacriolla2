@@ -1,0 +1,135 @@
+#!/bin/bash
+
+# Substitute the tailwind config and root CSS variables
+cat << 'STYLE' > temp_style.txt
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#8B5A2B", // Warm wood/leather brown
+                        gold: "rgb(var(--color-gold) / <alpha-value>)",
+                        "void": "rgb(var(--color-void) / <alpha-value>)",
+                        "divider": "rgb(var(--color-divider) / <alpha-value>)",
+                        "card-depth": "rgb(var(--color-card-depth) / <alpha-value>)",
+                        stone: {
+                            100: "rgb(var(--color-text-100) / <alpha-value>)",
+                            200: "rgb(var(--color-text-200) / <alpha-value>)",
+                            300: "rgb(var(--color-text-300) / <alpha-value>)",
+                            400: "rgb(var(--color-text-400) / <alpha-value>)",
+                            500: "rgb(var(--color-text-500) / <alpha-value>)",
+                            600: "rgb(var(--color-text-600) / <alpha-value>)",
+                            700: "rgb(var(--color-text-700) / <alpha-value>)",
+                            800: "rgb(var(--color-text-800) / <alpha-value>)",
+                            900: "rgb(var(--color-text-900) / <alpha-value>)",
+                        }
+                    },
+                    fontFamily: {
+                        display: ["'Oswald'", "sans-serif"],
+                        serif: ["'Source Serif 4'", "serif"],
+                    }
+                },
+            },
+        };
+    </script>
+    <style>
+        :root {
+            --color-void: 10 7 4;
+            --color-card-depth: 18 11 6;
+            --color-divider: 26 17 8;
+            --color-gold: 197 160 101;
+            
+            --color-text-100: 245 245 244;
+            --color-text-200: 231 229 228;
+            --color-text-300: 214 211 209;
+            --color-text-400: 168 162 158;
+            --color-text-500: 120 113 108;
+            --color-text-600: 87 83 78;
+            --color-text-700: 68 64 60;
+            --color-text-800: 41 37 36;
+            --color-text-900: 28 25 23;
+
+            --bg-paper-rgba: rgba(255, 255, 255, 0.03);
+            --filter-logo: drop-shadow(0 0 30px rgba(92, 64, 51, 0.2));
+            --text-glow-white: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
+            --gold-svg-color: %23C5A065;
+        }
+
+        html.light {
+            --color-void: 245 235 224; /* #F5EBE0 */
+            --color-card-depth: 252 248 242; /* #FCF8F2 */
+            --color-divider: 230 213 195; /* #E6D5C3 */
+            --color-gold: 154 123 79; /* #9A7B4F */
+            
+            --color-text-100: 28 25 23;
+            --color-text-200: 41 37 36;
+            --color-text-300: 68 64 60;
+            --color-text-400: 87 83 78;
+            --color-text-500: 120 113 108;
+            --color-text-600: 168 162 158;
+            --color-text-700: 214 211 209;
+            --color-text-800: 231 229 228;
+            --color-text-900: 245 245 244;
+
+            --bg-paper-rgba: rgba(0, 0, 0, 0.04);
+            --filter-logo: drop-shadow(0 0 30px rgba(154, 123, 79, 0.4));
+            --text-glow-white: none;
+            --gold-svg-color: %239A7B4F;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgb(var(--color-void)); }
+        ::-webkit-scrollbar-thumb { background: rgb(var(--color-gold)); border-radius: 4px; }
+        ::selection { background: rgb(var(--color-gold)); color: rgb(var(--color-void)); }
+        
+        .vignette-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            pointer-events: none;
+        }
+
+        html.light .vignette-overlay {
+            background: radial-gradient(circle at center, transparent 0%, rgba(154, 123, 79, 0.15) 100%);
+        }
+
+        .paper-texture {
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--bg-paper-rgba) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--bg-paper-rgba) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .guardapampa-divider {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 4h8v4h6v4h6v6h-6v4h-6v4h-8v-4h-6v-4h-6v-6h6v-4h6v-4z' fill='var(--gold-svg-color)' fill-opacity='0.3'/%3E%3Crect x='0' y='0' width='60' height='2' fill='var(--gold-svg-color)' fill-opacity='0.3'/%3E%3Crect x='0' y='28' width='60' height='2' fill='var(--gold-svg-color)' fill-opacity='0.3'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-position: center;
+            height: 30px;
+            width: 100%;
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        /* We need a clever trick for SVG data URI variables. Since we can't interpolate CSS vars in URL directly, we'll redefine the background image for light mode */
+        html.light .guardapampa-divider {
+             background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 4h8v4h6v4h6v6h-6v4h-6v4h-8v-4h-6v-4h-6v-6h6v-4h6v-4z' fill='%239A7B4F' fill-opacity='0.3'/%3E%3Crect x='0' y='0' width='60' height='2' fill='%239A7B4F' fill-opacity='0.3'/%3E%3Crect x='0' y='28' width='60' height='2' fill='%239A7B4F' fill-opacity='0.3'/%3E%3C/svg%3E");
+        }
+
+        .guardapampa-divider:not(.light) {
+             background-image: url("data:image/svg+xml,%3Csvg width='60' height='30' viewBox='0 0 60 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M26 4h8v4h6v4h6v6h-6v4h-6v4h-8v-4h-6v-4h-6v-6h6v-4h6v-4z' fill='%23C5A065' fill-opacity='0.3'/%3E%3Crect x='0' y='0' width='60' height='2' fill='%23C5A065' fill-opacity='0.3'/%3E%3Crect x='0' y='28' width='60' height='2' fill='%23C5A065' fill-opacity='0.3'/%3E%3C/svg%3E");
+        }
+
+
+        .text-glow-gold {
+            text-shadow: 0 0 15px rgb(var(--color-gold) / 0.4), 0 0 30px rgb(var(--color-gold) / 0.2);
+        }
+
+        .element-glow-gold {
+            box-shadow: 0 0 20px rgb(var(--color-gold) / 0.15), inset 0 0 15px rgb(var(--color-gold) / 0.05);
+        }
+STYLE
+
+# Replace the block from tailwind.config to element-glow-gold
+sed -i -e '/tailwind\.config = {/,/\.element-glow-gold {/!b' -e '/\.element-glow-gold {/!d' -e '/\.element-glow-gold {/r temp_style.txt' -e 'd' index.html
+
+# Fix element-glow-gold rules in the file
+sed -i 's/\.element-glow-gold {/ /' index.html
+

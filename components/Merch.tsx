@@ -10,7 +10,7 @@ const PRODUCTS = [
   {
     id: 1,
     name: 'Remera "Juan Moreira"',
-    price: '$24.000 ARS',
+    price: '$32.000 ARS',
     images: [
       'https://i.imgur.com/02WkVzL.jpeg',
       'https://i.imgur.com/lglJcJo.jpeg',
@@ -18,7 +18,7 @@ const PRODUCTS = [
     ],
     description: '',
     sizes: ['S', 'M', 'L', 'XL'],
-    link: 'https://www.mercadolibre.com.ar',
+    link: 'https://www.mercadolibre.com.ar/up/MLAU4371625525?matt_tool=89488245&pdp_filters=item_id:MLA1911337643&ua=f9wi8yv9-uf6jrKmMMhKkEaf6m_60DSd4t79pf_r0weR0iWv#origin=share&sid=share&wid=MLA1911337643&action=copy',
     code: 'IND-001',
     specs: [],
     stockLabel: 'NUEVO INGRESO',
@@ -27,14 +27,14 @@ const PRODUCTS = [
   {
     id: 2,
     name: 'Remera "Juan Moreira"',
-    price: '$24.000 ARS',
+    price: '$32.000 ARS',
     images: [
       'https://i.imgur.com/tymB2sh.jpeg',
       'https://i.imgur.com/S7C7L6r.jpeg'
     ],
     description: '',
     sizes: ['S', 'M', 'L', 'XL'],
-    link: 'https://www.mercadolibre.com.ar',
+    link: 'https://www.mercadolibre.com.ar/up/MLAU4371625525?matt_tool=89488245&pdp_filters=item_id:MLA1911337643&ua=f9wi8yv9-uf6jrKmMMhKkEaf6m_60DSd4t79pf_r0weR0iWv#origin=share&sid=share&wid=MLA1911337643&action=copy',
     code: 'IND-002',
     specs: [],
     stockLabel: 'NUEVO INGRESO',

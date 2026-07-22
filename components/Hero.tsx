@@ -95,8 +95,10 @@ const Hero: React.FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => {
-            const btn = document.querySelector('[data-sedes-btn]');
-            if (btn) (btn as HTMLButtonElement).click();
+            const elem = document.getElementById('donde-aprender');
+            if (elem) {
+              elem.scrollIntoView({ behavior: 'smooth' });
+            }
           }}
           className="px-8 py-4 bg-gold text-void font-display text-sm tracking-[0.3em] uppercase font-bold rounded-sm shadow-2xl hover:shadow-gold/40 transition-all shine-effect mb-12 border border-gold/50 relative overflow-hidden group"
         >
@@ -163,8 +165,10 @@ const Hero: React.FC = () => {
           <motion.button
             whileTap={{ scale: 0.98 }}
             onClick={() => {
-              const btn = document.querySelector('[data-sedes-btn]');
-              if (btn) (btn as HTMLButtonElement).click();
+              const elem = document.getElementById('donde-aprender');
+              if (elem) {
+                elem.scrollIntoView({ behavior: 'smooth' });
+              }
             }}
             className="w-full max-w-[320px] py-4 bg-void border border-gold/50 text-gold font-display text-[0.75rem] tracking-[0.3em] uppercase font-bold rounded-sm shadow-[0_0_20px_rgba(197,160,101,0.2)] flex justify-center items-center gap-3 relative overflow-hidden group hover:bg-gold hover:text-void transition-colors"
           >

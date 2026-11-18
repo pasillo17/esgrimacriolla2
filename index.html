@@ -8,15 +8,15 @@
     <meta name="description" content="Buenas y Santas – Academia de Esgrima Criolla y Arte Marcial Argentino. Clases presenciales, formación online, historia gaucha y equipamiento tradicional." />
     <meta name="theme-color" content="#0A0704" />
 
-    <!-- Favicon & Browser Icons (Google Chrome, Search & Mobile) -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <!-- Favicon & Browser Icons (Google Chrome Tab, Search & Mobile) -->
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64x64.png?v=3" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png?v=3" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png?v=3" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png?v=3" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=3" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
+    <link rel="manifest" href="/site.webmanifest?v=3" />
 
     <!-- OpenGraph / Social Preview -->
     <meta property="og:type" content="website" />
@@ -52,7 +52,7 @@
 
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <script>
@@ -62,6 +62,9 @@
                 extend: {
                     colors: {
                         primary: "#8B5A2B", // Warm wood/leather brown
+                        oxblood: "#6B1D14", // Vintage lacre / oxblood leather
+                        brass: "#CAA462",   // Aged antique brass
+                        parchment: "#EFE6D5", // Warm archival parchment
                         gold: "rgb(var(--color-gold) / <alpha-value>)",
                         "void": "rgb(var(--color-void) / <alpha-value>)",
                         "divider": "rgb(var(--color-divider) / <alpha-value>)",
@@ -80,6 +83,7 @@
                     },
                     fontFamily: {
                         display: ["'Oswald'", "sans-serif"],
+                        heritage: ["'Cinzel'", "serif"],
                         serif: ["'Source Serif 4'", "serif"],
                     }
                 },
@@ -88,9 +92,9 @@
     </script>
     <style>
         :root {
-            --color-void: 10 7 4;
-            --color-card-depth: 18 11 6;
-            --color-divider: 26 17 8;
+            --color-void: 5 5 5;
+            --color-card-depth: 10 10 10;
+            --color-divider: 26 26 26;
             --color-gold: 197 160 101;
             
             --color-text-100: 245 245 244;
@@ -103,29 +107,29 @@
             --color-text-800: 41 37 36;
             --color-text-900: 28 25 23;
 
-            --bg-paper-rgba: rgba(255, 255, 255, 0.03);
+            --bg-paper-rgba: rgba(255, 255, 255, 0.02);
             --filter-logo: drop-shadow(0 0 30px rgba(92, 64, 51, 0.2));
             --text-glow-white: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.2);
             --gold-svg-color: %23C5A065;
         }
 
         html.light {
-            --color-void: 222 208 193; /* #F5EBE0 */
-            --color-card-depth: 235 227 217; /* #FCF8F2 */
-            --color-divider: 230 213 195; /* #E6D5C3 */
-            --color-gold: 100 65 30; /* #64411E */
+            --color-void: 235 224 206;
+            --color-card-depth: 245 238 225;
+            --color-divider: 205 189 165;
+            --color-gold: 100 65 30;
             
-            --color-text-100: 10 10 10;
-            --color-text-200: 20 20 20;
-            --color-text-300: 30 30 30;
-            --color-text-400: 45 45 45;
-            --color-text-500: 120 113 108;
-            --color-text-600: 168 162 158;
-            --color-text-700: 214 211 209;
-            --color-text-800: 231 229 228;
-            --color-text-900: 245 245 244;
+            --color-text-100: 20 18 15;
+            --color-text-200: 32 29 25;
+            --color-text-300: 48 44 38;
+            --color-text-400: 75 68 60;
+            --color-text-500: 110 100 90;
+            --color-text-600: 150 140 130;
+            --color-text-700: 190 180 170;
+            --color-text-800: 220 212 202;
+            --color-text-900: 240 235 228;
 
-            --bg-paper-rgba: rgba(0, 0, 0, 0.04);
+            --bg-paper-rgba: rgba(100, 65, 30, 0.03);
             --filter-logo: drop-shadow(0 0 30px rgba(100, 65, 30, 0.4));
             --text-glow-white: none;
             --gold-svg-color: %2364411E;

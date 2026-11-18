@@ -1,4 +1,3 @@
-
 import { Feature, Instructor } from './types';
 
 export const FEATURES: Feature[] = [

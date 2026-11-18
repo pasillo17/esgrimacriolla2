@@ -1,49 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { ShieldCheck, Truck, CreditCard, Check } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
+import { GauchoWatermark } from './TornPaperDivider';
 
 interface MerchProps {
   onBack: () => void;
 }
 
+const SIZE_GUIDE: Record<string, string> = {
+  S: 'Ancho 50 cm × Largo 68 cm',
+  M: 'Ancho 53 cm × Largo 71 cm',
+  L: 'Ancho 56 cm × Largo 74 cm',
+  XL: 'Ancho 59 cm × Largo 77 cm'
+};
+
 const PRODUCTS = [
   {
     id: 1,
     name: 'Remera "Juan Moreira"',
+    edition: 'LOTE N° 01 · AZUL CRIOLLO',
     price: '$32.000 ARS',
     images: [
       'https://i.imgur.com/02WkVzL.jpeg',
       'https://i.imgur.com/lglJcJo.jpeg',
       'https://i.imgur.com/Yf8taGR.jpeg'
     ],
-    description: '',
+    description:
+      'Tributo al mítico gaucho matrero de nuestra historia. Confeccionada en algodón peinado premium de alto gramaje, ideal tanto para el entrenamiento en pedana como para vestir con orgullo criollo todos los días.',
     sizes: ['S', 'M', 'L', 'XL'],
     link: 'https://www.mercadolibre.com.ar/up/MLAU4371625525?matt_tool=89488245&pdp_filters=item_id:MLA1911337643&ua=f9wi8yv9-uf6jrKmMMhKkEaf6m_60DSd4t79pf_r0weR0iWv#origin=share&sid=share&wid=MLA1911337643&action=copy',
-    code: 'IND-001',
-    specs: [],
-    stockLabel: 'NUEVO INGRESO',
-    highlightColor: '#0852ce'
+    code: 'REG. IND-001 · CONFECCIÓN OFICIAL',
+    specs: [
+      'Algodón 100% Peinado 24/1 Premium',
+      'Estampa serigráfica de alta resistencia',
+      'Costuras reforzadas para entrenamiento'
+    ],
+    stockLabel: 'EDICIÓN PATRIMONIO',
+    highlightColor: '#3b82f6'
   },
   {
     id: 2,
     name: 'Remera "Juan Moreira"',
+    edition: 'LOTE N° 02 · ROSA PAMPA',
     price: '$32.000 ARS',
     images: [
       'https://i.imgur.com/tymB2sh.jpeg',
       'https://i.imgur.com/S7C7L6r.jpeg'
     ],
-    description: '',
+    description:
+      'Diseño exclusivo de la Academia Buenas y Santas con arte ilustrado de época. Calce cómodo, tela respirable y terminación suave al tacto con despacho inmediato a todo el país.',
     sizes: ['S', 'M', 'L', 'XL'],
     link: 'https://www.mercadolibre.com.ar/up/MLAU4371625525?matt_tool=89488245&pdp_filters=item_id:MLA1911337643&ua=f9wi8yv9-uf6jrKmMMhKkEaf6m_60DSd4t79pf_r0weR0iWv#origin=share&sid=share&wid=MLA1911337643&action=copy',
-    code: 'IND-002',
-    specs: [],
-    stockLabel: 'NUEVO INGRESO',
+    code: 'REG. IND-002 · CONFECCIÓN OFICIAL',
+    specs: [
+      'Algodón 100% Peinado 24/1 Premium',
+      'Arte exclusivo Juan Moreira al dorso y frente',
+      'Envío rápido por Mercado Envíos'
+    ],
+    stockLabel: 'TIRADA LIMITADA',
     highlightColor: '#f472b6'
   }
 ];
 
-
-const ProductGallery: React.FC<{ images: string[], alt: string }> = ({ images, alt }) => {
+const ProductGallery: React.FC<{ images: string[]; alt: string }> = ({ images, alt }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -65,13 +85,21 @@ const ProductGallery: React.FC<{ images: string[], alt: string }> = ({ images, a
           transition={{ duration: 1 }}
           src={images[currentIndex]}
           alt={`${alt} - vista ${currentIndex + 1}`}
-          className="absolute inset-0 w-full h-full object-cover filter sepia-[0.3] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
+          referrerPolicy="no-referrer"
+          className="absolute inset-0 w-full h-full object-cover filter sepia-[0.25] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
         />
       </AnimatePresence>
       {images.length > 1 && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
           {images.map((_, i) => (
-            <div key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === currentIndex ? 'bg-gold' : 'bg-white/30'}`} />
+            <button
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              aria-label={`Ver imagen ${i + 1}`}
+              className={`w-2 h-2 rounded-full transition-colors cursor-pointer ${
+                i === currentIndex ? 'bg-gold' : 'bg-white/30'
+              }`}
+            />
           ))}
         </div>
       )}
@@ -80,145 +108,212 @@ const ProductGallery: React.FC<{ images: string[], alt: string }> = ({ images, a
 };
 
 const Merch: React.FC<MerchProps> = ({ onBack }) => {
+  const [selectedSizes, setSelectedSizes] = useState<Record<number, string>>({
+    1: 'L',
+    2: 'M'
+  });
+
+  const handleSizeSelect = (productId: number, size: string) => {
+    setSelectedSizes((prev) => ({ ...prev, [productId]: size }));
+  };
+
   return (
-    <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-24 pb-12 overflow-x-hidden">
+    <div className="min-h-screen bg-gaucho-telar text-stone-300 selection:bg-gold selection:text-void pt-28 pb-24 overflow-x-hidden relative">
       {/* Grain Overlay */}
       <div className="fixed inset-0 pointer-events-none z-40 bg-grain opacity-5 mix-blend-overlay"></div>
+
+      {/* Ornate Gaucho Platería Watermarks */}
+      <GauchoWatermark
+        variant="rosette"
+        className="fixed -left-36 top-1/3 w-[520px] h-[520px] opacity-[0.04] pointer-events-none"
+      />
+      <GauchoWatermark
+        variant="compass"
+        className="fixed -right-36 bottom-1/4 w-[520px] h-[520px] opacity-[0.04] pointer-events-none"
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <RevealOnScroll>
           <div className="flex flex-col items-center mb-10 md:mb-16 text-center mx-auto">
-            <button 
-              onClick={onBack} 
-              className="mb-8 group flex items-center gap-2 text-stone-500 hover:text-gold transition-colors"
+            <button
+              onClick={onBack}
+              className="mb-8 group flex items-center gap-2 text-stone-400 hover:text-gold transition-colors cursor-pointer"
             >
-              <span className="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
-              <span className="text-xs font-display font-bold uppercase tracking-[0.2em]">Volver al Inicio</span>
+              <span className="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">
+                arrow_back
+              </span>
+              <span className="text-xs font-display font-bold uppercase tracking-[0.25em]">
+                Volver al Inicio
+              </span>
             </button>
-            
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-stone-100 tracking-[0.15em] md:tracking-[0.2em] uppercase mb-4 text-center w-full text-glow-white leading-tight">
-              Conseguí tus <br className="md:hidden" /> Remeras
+
+            <div className="torn-note px-5 py-1.5 mb-4 border-x border-gold/30">
+              <span className="font-display text-[0.6rem] tracking-[0.45em] text-gold uppercase font-bold">
+                ✦ ALMACÉN DE RAMOS GENERALES · EST. MMVI ✦
+              </span>
+            </div>
+
+            <h2 className="font-heritage text-3xl sm:text-4xl md:text-6xl text-stone-100 tracking-[0.15em] uppercase mb-4 text-center w-full text-glow-white leading-tight font-bold">
+              Sastrería & Indumentaria
             </h2>
-            <div className="flex items-center justify-center gap-4 w-full mb-12">
-              <div className="h-px bg-gold/30 w-8 md:w-12"></div>
-              <p className="text-[0.5rem] md:text-[0.6rem] text-gold tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold text-center text-glow-gold">De Esgrima Criolla</p>
-              <div className="h-px bg-gold/30 w-8 md:w-12"></div>
+            <div className="flex items-center justify-center gap-4 w-full mb-10">
+              <div className="h-px bg-gold/40 w-10 md:w-16"></div>
+              <p className="text-[0.55rem] md:text-[0.65rem] text-gold tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold text-center text-glow-gold">
+                Prendas Oficiales de Esgrima Criolla
+              </p>
+              <div className="h-px bg-gold/40 w-10 md:w-16"></div>
+            </div>
+
+            {/* Torn Parchment Guarantee Seal Bar */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-4xl torn-paper-slip p-6 border-x border-gold/30">
+              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.18em] text-stone-200">
+                <ShieldCheck className="w-4 h-4 text-gold flex-shrink-0" />
+                <span>Sello de Compra Protegida ML</span>
+              </div>
+              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.18em] text-stone-200 border-y sm:border-y-0 sm:border-x border-dashed border-gold/25 py-2 sm:py-0">
+                <Truck className="w-4 h-4 text-gold flex-shrink-0" />
+                <span>Despacho a Toda la República</span>
+              </div>
+              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.18em] text-stone-200">
+                <CreditCard className="w-4 h-4 text-gold flex-shrink-0" />
+                <span>Algodón Peinado 24/1 legítimo</span>
+              </div>
             </div>
           </div>
         </RevealOnScroll>
-        
-        <div className="relative w-[100vw] left-1/2 -translate-x-1/2 mb-12 md:mb-16">
+
+        <div className="relative w-[100vw] left-1/2 -translate-x-1/2 mb-12 md:mb-20">
           <div className="guardapampa-divider opacity-80 animate-guardapampa"></div>
         </div>
 
-        <div className="flex flex-col gap-12 md:gap-32 max-w-6xl mx-auto px-4 sm:px-6">
-          {PRODUCTS.map((product, idx) => (
-            <RevealOnScroll key={product.id} delay={100}>
-              <div className={`relative flex flex-col ${idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-6 md:gap-16 group p-5 md:p-0 border border-gold/20 md:border-none bg-void/80 md:bg-transparent shadow-2xl md:shadow-none rounded-sm`}>
-                
-                {/* Immersive Image Container */}
-                <div className="relative w-full md:w-3/5 aspect-[4/5] md:aspect-square overflow-hidden border border-gold/20 shadow-2xl z-10 rounded-sm">
-                  {(product.images && product.images.length > 0) ? (
-                    <ProductGallery images={product.images} alt={product.name} />
-                  ) : (
-                    <img 
-                      src={product.images[0]} 
-                      alt={product.name}
-                      className="absolute inset-0 w-full h-full object-cover filter sepia-[0.3] contrast-125 brightness-90 group-hover:scale-110 transition-transform duration-1000 ease-out"
-                    />
-                  )}
-                  {/* Aggressive Overlay for Mobile */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent md:hidden opacity-50"></div>
-                  <div className="absolute inset-0 bg-gold/5 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700"></div>
-                  
-                  {product.stockLabel && (
-                     <div className="absolute top-4 md:top-6 right-4 md:right-auto md:left-6 z-20">
-                        <span className="bg-gold text-void text-[0.6rem] md:text-xs font-display font-black px-3 py-1.5 uppercase tracking-[0.3em] shadow-[0_0_20px_rgba(197,160,101,0.4)]">
+        <div className="flex flex-col gap-16 md:gap-32 max-w-6xl mx-auto px-4 sm:px-6">
+          {PRODUCTS.map((product, idx) => {
+            const currentSize = selectedSizes[product.id] || 'L';
+
+            return (
+              <RevealOnScroll key={product.id} delay={100}>
+                <div
+                  className={`relative flex flex-col ${
+                    idx % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'
+                  } items-center gap-8 md:gap-14 group p-5 md:p-0 border border-gold/25 md:border-none bg-void/80 md:bg-transparent shadow-2xl md:shadow-none rounded-sm`}
+                >
+                  {/* Immersive Heritage Framed Image Container */}
+                  <div className="relative w-full md:w-3/5 aspect-[4/5] md:aspect-square overflow-hidden border border-gold/30 shadow-2xl z-10 rounded-sm p-3 bg-card-depth">
+                    <div className="absolute inset-2 border border-gold/20 z-20 pointer-events-none"></div>
+                    <div className="relative w-full h-full overflow-hidden">
+                      <ProductGallery images={product.images} alt={product.name} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent md:hidden opacity-50"></div>
+                      <div className="absolute inset-0 bg-gold/5 mix-blend-overlay group-hover:bg-transparent transition-colors duration-700"></div>
+                    </div>
+
+                    {product.stockLabel && (
+                      <div className="absolute top-6 left-6 z-30 torn-note px-4 py-1.5 border-x border-gold/40">
+                        <span className="text-gold text-[0.6rem] md:text-xs font-display font-black uppercase tracking-[0.3em]">
                           {product.stockLabel}
                         </span>
-                     </div>
-                  )}
-                  
-                  {/* Giant Background Number for "alocado" feel - Hidden on mobile for cleaner look */}
-                  <div className="hidden md:block absolute -bottom-10 -right-10 md:bottom-auto md:top-1/2 md:-translate-y-1/2 md:left-1/2 md:-translate-x-1/2 font-display text-[15rem] md:text-[25rem] font-bold text-white/[0.04] select-none pointer-events-none z-0 mix-blend-overlay">
-                    0{idx + 1}
-                  </div>
-                </div>
-                
-                {/* Content Card */}
-                <div className="relative w-full md:w-2/5 md:-mt-0 z-20 self-center md:bg-void/95 md:backdrop-blur-xl md:border md:border-gold/10 md:p-8 md:shadow-2xl rounded-sm text-center md:text-left">
-                  
-                  <div className="hidden md:flex flex-row justify-between items-center mb-6">
-                     <span className="font-display text-[0.6rem] md:text-xs tracking-[0.4em] text-gold uppercase border-b border-gold/30 pb-1">{product.code}</span>
-                  </div>
-                  
-                  <h3 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-5xl uppercase tracking-[0.1em] mb-1 md:mb-4 leading-[1.2] md:leading-[1.1] text-stone-100">
-                    {product.name.replace(/["']/g, '').split(' ').map((word, i) => {
-                      if (product.highlightColor && word.toUpperCase() !== 'REMERA') {
-                        return <span key={i} style={{ color: product.highlightColor, textShadow: `0 0 10px ${product.highlightColor}80` }} className="drop-shadow-lg">{word} </span>;
-                      }
-                      return <span key={i} className="text-stone-100 text-glow-white">{word} </span>;
-                    })}
-                  </h3>
-                  
-                  <span className="block font-display text-lg sm:text-xl md:text-3xl text-stone-300 tracking-widest font-bold mb-4 md:mb-6">
-                    {product.price}
-                  </span>
-                  
-                  {product.description && (
-                  <p className="font-serif text-stone-400 text-sm md:text-base italic mb-8 leading-relaxed">
-                    {product.description}
-                  </p>
-                  )}
-
-                  {product.specs && product.specs.length > 0 && (
-                  <div className="hidden md:block space-y-3 mb-10">
-                    {product.specs.map((spec, i) => (
-                      <div key={i} className="flex items-center gap-4">
-                         <div className="w-1.5 h-1.5 bg-gold rotate-45 flex-shrink-0"></div>
-                         <span className="font-display text-[0.65rem] md:text-xs uppercase tracking-[0.2em] text-stone-400">{spec}</span>
                       </div>
-                    ))}
+                    )}
                   </div>
-                  )}
 
-                  {product.link !== '#' && (
-                  <a 
-                    href={product.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="relative overflow-hidden w-full sm:w-4/5 md:w-full mx-auto md:mx-0 py-3 md:py-5 bg-gold text-void font-display font-black text-[0.65rem] sm:text-xs md:text-sm uppercase tracking-[0.2em] md:tracking-[0.3em] hover:bg-stone-100 transition-colors flex flex-wrap items-center justify-center gap-2 shadow-[0_0_30px_rgba(197,160,101,0.2)] group/btn rounded-sm"
-                  >
-                    <span className="relative z-10 hidden md:block">Comprar Ahora</span>
-                    <span className="relative z-10 flex md:hidden items-center gap-2">
-                      Adquirir por
-                      <img src="https://http2.mlstatic.com/frontend-assets/ml-web-navigation/ui-navigation/5.21.22/mercadolibre/logo__small.png" alt="Mercado Libre" className="h-2.5 sm:h-3 w-auto filter grayscale opacity-90 mix-blend-multiply ml-1" />
+                  {/* Woven Garment Label Content Card with Torn Parchment Note */}
+                  <div className="relative w-full md:w-2/5 z-20 self-center heritage-card heritage-double-border p-6 sm:p-8 md:p-10 rounded-sm text-left">
+                    {/* Woven Label Header */}
+                    <div className="flex flex-wrap justify-between items-center gap-2 pb-4 mb-5 border-b border-dashed border-gold/30">
+                      <span className="font-display text-[0.6rem] tracking-[0.35em] text-gold uppercase font-bold">
+                        {product.code}
+                      </span>
+                      <span className="font-display text-[0.55rem] tracking-[0.25em] text-stone-400 uppercase">
+                        {product.edition}
+                      </span>
+                    </div>
+
+                    <h3 className="font-heritage text-2xl sm:text-3xl lg:text-4xl uppercase tracking-[0.1em] mb-2 leading-tight text-stone-100 font-bold">
+                      {product.name}
+                    </h3>
+
+                    <span className="block font-display text-2xl md:text-3xl text-gold tracking-widest font-bold mb-5">
+                      {product.price}
                     </span>
-                    <span className="material-icons-outlined relative z-10 group-hover/btn:translate-x-2 transition-transform hidden md:block">shopping_cart</span>
-                  </a>
-                  )}
+
+                    <div className="torn-note p-4 mb-6 border-x border-gold/25">
+                      <p className="font-serif text-stone-200 text-sm leading-relaxed italic">
+                        {product.description}
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 mb-6 border-y border-dashed border-gold/25 py-4">
+                      {product.specs.map((spec, i) => (
+                        <div key={i} className="flex items-center gap-2.5">
+                          <Check className="w-3.5 h-3.5 text-gold flex-shrink-0" />
+                          <span className="font-display text-[0.65rem] uppercase tracking-[0.18em] text-stone-300">
+                            {spec}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Interactive Vintage Garment Size Selector */}
+                    <div className="mb-6">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <span className="font-display text-xs uppercase tracking-[0.2em] text-stone-200 font-bold">
+                          Talle de Prenda: <span className="text-gold">{currentSize}</span>
+                        </span>
+                        <span className="font-serif italic text-xs text-stone-400">
+                          {SIZE_GUIDE[currentSize]}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-4 gap-2">
+                        {product.sizes.map((size) => {
+                          const isSelected = currentSize === size;
+                          return (
+                            <button
+                              key={size}
+                              type="button"
+                              onClick={() => handleSizeSelect(product.id, size)}
+                              className={`py-2.5 font-display text-xs font-black uppercase tracking-[0.2em] border transition-all rounded-sm cursor-pointer ${
+                                isSelected
+                                  ? 'bg-gold text-void border-gold shadow-[0_0_15px_rgba(202,164,98,0.4)]'
+                                  : 'bg-void/70 text-stone-300 border-gold/25 hover:border-gold/60 hover:text-gold'
+                              }`}
+                            >
+                              {size}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <a
+                      href={product.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative overflow-hidden w-full py-4 md:py-5 bg-gold text-void font-display font-black text-xs md:text-sm uppercase tracking-[0.22em] hover:bg-stone-100 transition-colors flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(202,164,98,0.25)] group/btn rounded-sm"
+                    >
+                      <span className="relative z-10">Comprar Talle {currentSize} en Mercado Libre</span>
+                      <span className="material-icons-outlined relative z-10 group-hover/btn:translate-x-2 transition-transform">
+                        shopping_cart
+                      </span>
+                    </a>
+                  </div>
                 </div>
-
-              </div>
-            </RevealOnScroll>
-
-          ))}
+              </RevealOnScroll>
+            );
+          })}
         </div>
 
         {/* Elegant Coming Soon Text */}
         <RevealOnScroll delay={300}>
           <div className="max-w-3xl mx-auto mt-24 mb-12 text-center relative">
-            <div className="absolute left-1/2 -top-12 -translate-x-1/2 w-px h-8 bg-gradient-to-b from-transparent to-gold/50"></div>
-            <h3 className="font-serif italic text-2xl md:text-4xl text-stone-300 leading-relaxed font-light">
-              Próximamente más remeras, artículos y libros de esta disciplina gaucha...
-            </h3>
-            <div className="absolute left-1/2 -bottom-12 -translate-x-1/2 w-px h-8 bg-gradient-to-t from-transparent to-gold/50"></div>
+            <div className="torn-paper-slip px-8 py-10 border-x border-gold/25">
+              <h3 className="font-serif italic text-xl md:text-3xl text-stone-200 leading-relaxed font-light">
+                Próximamente más remeras, artículos y libros de esta disciplina gaucha...
+              </h3>
+            </div>
           </div>
         </RevealOnScroll>
-
       </div>
     </div>
-
   );
 };
 

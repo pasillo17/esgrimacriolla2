@@ -49,7 +49,7 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
           <div className="flex flex-col items-center mb-12 md:mb-16 text-center mx-auto">
             <button 
               onClick={onBack} 
-              className="mb-8 group flex items-center gap-2 text-stone-500 hover:text-gold transition-colors"
+              className="mb-8 group flex items-center gap-2 text-stone-500 hover:text-gold transition-colors cursor-pointer"
             >
               <span className="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span className="text-xs font-display font-bold uppercase tracking-[0.2em]">Volver al Inicio</span>
@@ -68,7 +68,6 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
         <RevealOnScroll delay={100}>
           <div className="mb-20 md:mb-24 relative w-full max-w-4xl mx-auto">
             <div className="aspect-video w-full bg-black border border-gold/20 shadow-2xl relative overflow-hidden group">
-               {/* Placeholder for Video - In a real app, use an iframe or video tag */}
                <div className="absolute inset-0 flex items-center justify-center bg-black">
                   <img 
                     src="https://images.unsplash.com/photo-1533552352378-0234b6734104?q=80&w=2070&auto=format&fit=crop" 
@@ -127,27 +126,24 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
                     </ul>
                   </div>
 
-                  <button 
-                    onClick={() => {
-                      if (course.id === 3) {
-                        window.open('https://www.unca.edu.ar/cursosextension', '_blank');
-                      } else {
-                        const message = `Buenas quiero consultar por ${course.title}`;
-                        navigator.clipboard.writeText(message).then(() => {
-                          window.open('https://ig.me/m/esgrima_criolla', '_blank');
-                        }).catch(() => {
-                          window.open('https://ig.me/m/esgrima_criolla', '_blank');
-                        });
-                      }
-                    }}
-                    className="relative w-full py-4 bg-void border border-gold/40 text-gold font-display font-bold text-[0.7rem] uppercase tracking-[0.3em] overflow-hidden group transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:bg-gold/5 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_20px_rgba(212,175,55,0.25)] mt-auto"
+                  <a
+                    href={
+                      course.id === 3
+                        ? 'https://www.unca.edu.ar/cursosextension'
+                        : `https://api.whatsapp.com/send?phone=5492216246179&text=${encodeURIComponent(
+                            `¡Buenas y Santas! Quiero inscribirme o recibir información sobre: ${course.title}.`
+                          )}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative w-full py-4 bg-void border border-gold/40 text-gold font-display font-bold text-[0.7rem] uppercase tracking-[0.3em] overflow-hidden group transition-all duration-300 hover:scale-[1.02] hover:border-gold hover:bg-gold/5 shadow-[0_0_15px_rgba(212,175,55,0.1)] hover:shadow-[0_0_20px_rgba(212,175,55,0.25)] mt-auto flex items-center justify-center"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
                       INSCRIBIRSE
                       <span className="material-icons-outlined text-sm group-hover:translate-x-1 transition-transform duration-300">east</span>
                     </span>
                     <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-gold/20 to-transparent group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
-                  </button>
+                  </a>
                 </div>
               </div>
             </RevealOnScroll>
@@ -156,7 +152,6 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
 
         <RevealOnScroll delay={400}>
           <div className="mt-20 md:mt-32 p-10 md:p-16 border border-gold/30 bg-gradient-to-b from-[#1A150B] to-void text-center max-w-4xl mx-auto relative overflow-hidden shadow-[0_0_40px_rgba(197,160,101,0.08)] rounded-sm group">
-            {/* Decorative corners */}
             <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-gold/40 opacity-50"></div>
             <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-gold/40 opacity-50"></div>
             <div className="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-gold/40 opacity-50"></div>
@@ -170,17 +165,14 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
               </div>
               <h3 className="font-display text-2xl md:text-3xl text-gold uppercase tracking-[0.3em] mb-6 text-shadow">Certificación Oficial</h3>
               <p className="font-serif text-stone-300 text-sm md:text-base italic max-w-2xl mx-auto mb-10 leading-relaxed">
-                Nuestros cursos cuentan con el aval académico de la Universidad de Catamarca, garantizando la excelencia educativa en la preservación de nuestra cultura.
+                Nuestros cursos cuentan con el aval académico de la Universidad Nacional de Catamarca, garantizando la excelencia educativa en la preservación de nuestra cultura.
               </p>
-              <button 
-                onClick={() => {
-                  const message = `Buenas quiero consultar por la certificación oficial`;
-                  navigator.clipboard.writeText(message).then(() => {
-                    window.open('https://ig.me/m/esgrima_criolla', '_blank');
-                  }).catch(() => {
-                    window.open('https://ig.me/m/esgrima_criolla', '_blank');
-                  });
-                }}
+              <a 
+                href={`https://api.whatsapp.com/send?phone=5492216246179&text=${encodeURIComponent(
+                  '¡Buenas y Santas! Quiero consultar disponibilidad sobre los cursos online y la Certificación Oficial.'
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative px-10 py-4 bg-void border border-gold/50 text-gold font-display font-bold text-xs uppercase tracking-[0.3em] overflow-hidden group/btn transition-all duration-300 hover:scale-[1.02] hover:bg-gold/10 shadow-[0_0_15px_rgba(212,175,55,0.1)]"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
@@ -188,7 +180,7 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
                   <span className="material-icons-outlined text-sm group-hover/btn:translate-x-1 transition-transform duration-300">east</span>
                 </span>
                 <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-gold/10 to-transparent group-hover/btn:translate-x-full transition-transform duration-700 ease-in-out"></div>
-              </button>
+              </a>
             </div>
           </div>
         </RevealOnScroll>

@@ -33,7 +33,7 @@ const AIHistorian: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[60]">
+    <div className="fixed bottom-20 right-4 md:bottom-24 md:right-8 z-[60]">
       <AnimatePresence>
         {isOpen && (
           <motion.div 

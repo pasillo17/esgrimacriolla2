@@ -5,7 +5,7 @@ import RevealOnScroll from './RevealOnScroll';
 
 interface FaqSectionProps {
   onOpenModal: () => void;
-  onNavigate: (view: 'home' | 'merch' | 'sedes' | 'academia-online' | 'novedades') => void;
+  onNavigate: (view: 'home' | 'merch' | 'sedes' | 'academia-online' | 'novedades' | 'curso-visteador') => void;
 }
 
 const FAQS = [

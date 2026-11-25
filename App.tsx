@@ -10,11 +10,25 @@ import ClasesGrid from './components/ClasesGrid';
 import Merch from './components/Merch';
 import Sedes from './components/Sedes';
 import AcademiaOnline from './components/AcademiaOnline';
+import CursoVisteador, { PaymentApprovedModal } from './components/CursoVisteador';
 import BibliotecaBlog, { BlogTeaserSection } from './components/BibliotecaBlog';
 import AdmissionModal from './components/AdmissionModal';
 import FaqSection from './components/FaqSection';
 import FloatingCloser from './components/FloatingCloser';
 import { FEATURES } from './constants';
+
+type AppView = 'home' | 'merch' | 'sedes' | 'academia-online' | 'novedades' | 'curso-visteador';
+
+const getInitialUrlParams = () => {
+  if (typeof window === 'undefined') {
+    return { isPagoAprobado: false, isCursoVisteador: false };
+  }
+  const params = new URLSearchParams(window.location.search);
+  return {
+    isPagoAprobado: params.get('pago') === 'aprobado',
+    isCursoVisteador: params.get('curso') === 'de-cero-a-visteador',
+  };
+};
 
 const DustParticles: React.FC = () => {
   return (
@@ -77,24 +91,52 @@ const CustomCursor: React.FC = () => {
 };
 
 const App: React.FC = () => {
-  const [isLoadingApp, setIsLoadingApp] = useState(true);
-  const [currentView, setCurrentView] = useState<'home' | 'merch' | 'sedes' | 'academia-online' | 'novedades'>('home');
+  const initialUrl = getInitialUrlParams();
+  const [isLoadingApp, setIsLoadingApp] = useState(!(initialUrl.isPagoAprobado || initialUrl.isCursoVisteador));
+  const [currentView, setCurrentView] = useState<AppView>(
+    initialUrl.isPagoAprobado || initialUrl.isCursoVisteador ? 'curso-visteador' : 'home'
+  );
+  const [isPaymentApprovedOpen, setIsPaymentApprovedOpen] = useState(initialUrl.isPagoAprobado);
   const [selectedBlogPostId, setSelectedBlogPostId] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmissionModalOpen, setIsAdmissionModalOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  const navigateToView = (view: AppView) => {
+    setCurrentView(view);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (view === 'curso-visteador') {
+        url.searchParams.set('curso', 'de-cero-a-visteador');
+      } else {
+        url.searchParams.delete('curso');
+      }
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      window.history.replaceState({}, '', nextUrl);
+    }
+  };
+
+  const handleClosePaymentApproved = () => {
+    setIsPaymentApprovedOpen(false);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('pago');
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      window.history.replaceState({}, '', nextUrl);
+    }
+  };
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentView]);
 
   React.useEffect(() => {
-    const loadTimer = setTimeout(() => setIsLoadingApp(false), 1800);
+    const loadTimer = isLoadingApp ? setTimeout(() => setIsLoadingApp(false), 1800) : null;
 
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / totalHeight) * 100;
+      const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
       setScrollProgress(progress);
       setShowScrollTop(window.scrollY > 500);
     };
@@ -102,9 +144,9 @@ const App: React.FC = () => {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      clearTimeout(loadTimer);
+      if (loadTimer) clearTimeout(loadTimer);
     };
-  }, []);
+  }, [isLoadingApp]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -198,7 +240,7 @@ const App: React.FC = () => {
           if (view === 'novedades') {
             setSelectedBlogPostId(null);
           }
-          setCurrentView(view);
+          navigateToView(view);
           setIsMenuOpen(false);
         }}
         isMenuOpen={isMenuOpen}
@@ -413,7 +455,7 @@ const App: React.FC = () => {
                       <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-3xl">
                         <button
                           data-sedes-btn
-                          onClick={() => setCurrentView('sedes')}
+                          onClick={() => navigateToView('sedes')}
                           className="w-full sm:w-auto relative px-10 md:px-14 py-6 bg-gradient-to-r from-gold/90 via-gold to-gold/90 text-void font-display font-black text-xs md:text-sm uppercase tracking-[0.35em] hover:scale-105 transition-all shadow-[0_0_60px_rgba(212,170,106,0.3)] overflow-hidden group border-b-4 border-void/20 cursor-pointer"
                         >
                           <span className="relative z-10 flex items-center justify-center gap-4">
@@ -441,7 +483,7 @@ const App: React.FC = () => {
                     {/* Academia Online Card */}
                     <RevealOnScroll delay={0} direction="left">
                       <div
-                        onClick={() => setCurrentView('academia-online')}
+                        onClick={() => navigateToView('academia-online')}
                         className="bg-card-depth border border-gold/20 p-10 md:p-12 relative overflow-hidden group rounded-sm mx-auto w-full max-w-lg md:max-w-none cursor-pointer hover:border-gold/50 transition-all h-full flex flex-col shadow-2xl"
                       >
                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -467,7 +509,7 @@ const App: React.FC = () => {
                     {/* Tienda Card */}
                     <RevealOnScroll delay={150} direction="right">
                       <div
-                        onClick={() => setCurrentView('merch')}
+                        onClick={() => navigateToView('merch')}
                         className="bg-card-depth border border-gold/20 p-10 md:p-12 relative overflow-hidden group rounded-sm mx-auto w-full max-w-lg md:max-w-none cursor-pointer hover:border-gold/50 transition-all h-full flex flex-col shadow-2xl"
                       >
                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
@@ -497,14 +539,14 @@ const App: React.FC = () => {
               <BlogTeaserSection
                 onOpenLibrary={(postId) => {
                   setSelectedBlogPostId(postId || null);
-                  setCurrentView('novedades');
+                  navigateToView('novedades');
                 }}
               />
 
               {/* Preguntas Frecuentes & Cierre de Objeciones */}
               <FaqSection
                 onOpenModal={() => setIsAdmissionModalOpen(true)}
-                onNavigate={(view) => setCurrentView(view)}
+                onNavigate={(view) => navigateToView(view)}
               />
             </main>
 
@@ -558,14 +600,19 @@ const App: React.FC = () => {
             </footer>
           </>
         ) : currentView === 'merch' ? (
-          <Merch onBack={() => setCurrentView('home')} />
+          <Merch onBack={() => navigateToView('home')} />
         ) : currentView === 'sedes' ? (
-          <Sedes onBack={() => setCurrentView('home')} onOpenModal={() => setIsAdmissionModalOpen(true)} />
+          <Sedes onBack={() => navigateToView('home')} onOpenModal={() => setIsAdmissionModalOpen(true)} />
         ) : currentView === 'academia-online' ? (
-          <AcademiaOnline onBack={() => setCurrentView('home')} />
+          <AcademiaOnline
+            onBack={() => navigateToView('home')}
+            onOpenVisteador={() => navigateToView('curso-visteador')}
+          />
+        ) : currentView === 'curso-visteador' ? (
+          <CursoVisteador onBack={() => navigateToView('home')} />
         ) : (
           <BibliotecaBlog
-            onBack={() => setCurrentView('home')}
+            onBack={() => navigateToView('home')}
             initialPostId={selectedBlogPostId}
           />
         )}
@@ -578,8 +625,18 @@ const App: React.FC = () => {
           />
         </AnimatePresence>
 
-        <FloatingCloser onOpenModal={() => setIsAdmissionModalOpen(true)} />
-        <AIHistorian />
+        {/* Payment Approved Modal (?pago=aprobado) */}
+        <PaymentApprovedModal
+          isOpen={isPaymentApprovedOpen}
+          onClose={handleClosePaymentApproved}
+        />
+
+        {currentView !== 'curso-visteador' && (
+          <>
+            <FloatingCloser onOpenModal={() => setIsAdmissionModalOpen(true)} />
+            <AIHistorian />
+          </>
+        )}
       </div>
     </div>
   );

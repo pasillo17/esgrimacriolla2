@@ -3,6 +3,7 @@ import RevealOnScroll from './RevealOnScroll';
 
 interface AcademiaOnlineProps {
   onBack: () => void;
+  onOpenVisteador?: () => void;
 }
 
 const COURSES = [
@@ -35,7 +36,7 @@ const COURSES = [
   }
 ];
 
-const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
+const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack, onOpenVisteador }) => {
   return (
     <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-24 pb-12 overflow-x-hidden">
       {/* Vignette Overlay */}
@@ -63,6 +64,37 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack }) => {
             </div>
           </div>
         </RevealOnScroll>
+
+        {/* Nuevo Curso Destacado: De Cero a Visteador */}
+        {onOpenVisteador && (
+          <RevealOnScroll delay={50}>
+            <div className="mb-14 md:mb-16 max-w-5xl mx-auto bg-[#1C1E21] border border-[#2B6592]/70 rounded-sm overflow-hidden shadow-2xl">
+              <div className="h-1 w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
+              <div className="p-6 sm:p-8 md:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="text-left max-w-2xl">
+                  <p className="font-display text-xs uppercase tracking-[0.26em] text-[#6BA8D9] mb-2">
+                    CURSO ONLINE • DESDE CERO · MAESTRO JORGE PRINA
+                  </p>
+                  <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-[0.08em] text-[#F2EFE9] mb-3">
+                    De Cero a Visteador
+                  </h3>
+                  <p className="font-serif text-sm sm:text-base text-[#D8D3CA] leading-relaxed">
+                    Aprendé el sistema completo de Esgrima Criolla con facón y poncho paso a paso desde tu casa, sin necesidad de experiencia previa. Incluye 6 módulos, Bonus y Libro Digital de regalo.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={onOpenVisteador}
+                  className="w-full lg:w-auto flex-shrink-0 px-7 py-4 bg-[#2B6592] hover:bg-[#3475A8] text-[#F2EFE9] font-display text-xs sm:text-sm font-bold uppercase tracking-[0.2em] rounded-sm border border-[#6BA8D9]/45 transition-colors cursor-pointer whitespace-nowrap flex items-center justify-center gap-2"
+                >
+                  <span>Ver curso e inscribirme</span>
+                  <span className="material-icons-outlined text-base">east</span>
+                </button>
+              </div>
+            </div>
+          </RevealOnScroll>
+        )}
 
         {/* Video Section */}
         <RevealOnScroll delay={100}>

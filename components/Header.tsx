@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, Sun, Moon, Compass } from 'lucide-react';
 
 interface HeaderProps {
-  onNavigate: (view: 'home' | 'merch' | 'sedes' | 'academia-online' | 'novedades') => void;
+  onNavigate: (view: 'home' | 'merch' | 'sedes' | 'academia-online' | 'novedades' | 'curso-visteador') => void;
   isMenuOpen: boolean;
   onToggleMenu: () => void;
   onOpenModal?: () => void;
@@ -31,6 +31,8 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, isMenuOpen, onToggleMenu, o
       onNavigate('sedes');
     } else if (href === '#academia-online') {
       onNavigate('academia-online');
+    } else if (href === '#curso-visteador') {
+      onNavigate('curso-visteador');
     } else if (href === '#novedades') {
       onNavigate('novedades');
     } else {
@@ -46,21 +48,23 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, isMenuOpen, onToggleMenu, o
     }
   };
 
-  const navItems = [
+  const navItems: Array<{ name: string; href: string; highlight?: boolean; courseHighlight?: boolean }> = [
     { name: 'INICIO', href: '#inicio' },
     { name: 'CLASES', href: '#clases' },
     { name: 'SEDES', href: '#sedes' },
     { name: 'APRENDE ONLINE', href: '#academia-online' },
+    { name: 'DE CERO A VISTEADOR', href: '#curso-visteador', courseHighlight: true },
     { name: 'BIBLIOTECA', href: '#novedades' },
     { name: 'PREGUNTAS', href: '#preguntas-frecuentes' },
     { name: 'TIENDA', href: '#merch', highlight: true },
   ];
 
-  const mobileNavItems = [
+  const mobileNavItems: Array<{ name: string; href: string; highlight?: boolean; courseHighlight?: boolean }> = [
     { name: 'INICIO', href: '#inicio' },
     { name: 'CLASES', href: '#clases' },
     { name: 'SEDES', href: '#sedes' },
     { name: 'APRENDE ONLINE', href: '#academia-online' },
+    { name: 'DE CERO A VISTEADOR', href: '#curso-visteador', courseHighlight: true },
     { name: 'BIBLIOTECA & BLOG', href: '#novedades' },
     { name: 'PREGUNTAS FRECUENTES', href: '#preguntas-frecuentes' },
     { name: 'TIENDA OFICIAL', href: '#merch', highlight: true },
@@ -95,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, isMenuOpen, onToggleMenu, o
             </div>
           </motion.div>
 
-          <nav className="hidden lg:flex space-x-6 xl:space-x-8 items-center">
+          <nav className="hidden lg:flex space-x-4 xl:space-x-6 items-center">
             {navItems.map((item, idx) => (
               <motion.button
                 key={item.name}
@@ -103,10 +107,12 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, isMenuOpen, onToggleMenu, o
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.08 }}
                 onClick={() => handleNavClick(item.href)}
-                className={`font-display text-[0.58rem] xl:text-[0.62rem] tracking-[0.22em] transition-all duration-300 font-bold uppercase whitespace-nowrap cursor-pointer ${
-                  item.highlight
-                    ? 'text-gold border-b border-gold pb-1'
-                    : 'text-stone-400 hover:text-gold'
+                className={`font-display text-[0.56rem] xl:text-[0.6rem] tracking-[0.18em] xl:tracking-[0.2em] transition-all duration-300 font-bold uppercase whitespace-nowrap cursor-pointer ${
+                  item.courseHighlight
+                    ? 'text-[#6BA8D9] hover:text-[#96C7EC] border-b border-[#2B6592] pb-1'
+                    : item.highlight
+                      ? 'text-gold border-b border-gold pb-1'
+                      : 'text-stone-400 hover:text-gold'
                 }`}
               >
                 {item.name}
@@ -177,9 +183,9 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, isMenuOpen, onToggleMenu, o
             animate={{ opacity: 1, height: '100vh' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden bg-void/98 border-b border-gold/20 backdrop-blur-md absolute w-full top-20 left-0 overflow-hidden"
+            className="lg:hidden bg-void/98 border-b border-gold/20 backdrop-blur-md absolute w-full top-20 left-0 overflow-y-auto max-h-[calc(100vh-5rem)]"
           >
-            <div className="px-6 pt-8 pb-12 space-y-4 flex flex-col items-center">
+            <div className="px-6 pt-6 pb-12 space-y-3 flex flex-col items-center">
               {mobileNavItems.map((item, idx) => (
                 <motion.button
                   key={item.name}
@@ -187,8 +193,12 @@ const Header: React.FC<HeaderProps> = ({ onNavigate, isMenuOpen, onToggleMenu, o
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.4, delay: idx * 0.05 }}
                   onClick={() => handleNavClick(item.href)}
-                  className={`block font-display text-sm tracking-[0.35em] py-3.5 border-b border-gold/10 font-bold uppercase transition-colors w-full text-center hover:bg-gold/5 ${
-                    item.highlight ? 'text-gold' : 'text-stone-300 hover:text-stone-100'
+                  className={`block font-display text-sm tracking-[0.28em] py-3 border-b border-gold/10 font-bold uppercase transition-colors w-full text-center hover:bg-gold/5 ${
+                    item.courseHighlight
+                      ? 'text-[#6BA8D9]'
+                      : item.highlight
+                        ? 'text-gold'
+                        : 'text-stone-300 hover:text-stone-100'
                   }`}
                 >
                   {item.name}

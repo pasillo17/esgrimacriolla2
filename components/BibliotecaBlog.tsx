@@ -4,6 +4,8 @@ import {
   Search,
   ExternalLink,
   ArrowLeft,
+  ArrowRight,
+  Clock,
 } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
 import {
@@ -12,134 +14,13 @@ import {
   fetchBloggerPosts,
 } from '../services/bloggerService';
 
-interface BlogTeaserSectionProps {
-  onOpenLibrary: (initialPostId?: string) => void;
-}
-
-/**
- * Home Page Section: Minimalist preview of esgrimacriolla.blogspot.com
- */
-export const BlogTeaserSection: React.FC<BlogTeaserSectionProps> = ({
-  onOpenLibrary,
-}) => {
-  const [posts, setPosts] = useState<BlogPost[]>(CURATED_BLOG_POSTS);
-
-  useEffect(() => {
-    let mounted = true;
-    fetchBloggerPosts().then(({ posts: fetched }) => {
-      if (mounted && fetched.length > 0) {
-        setPosts(fetched);
-      }
-    });
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const featuredThree = posts.slice(0, 3);
-
-  return (
-    <section
-      id="biblioteca-preview"
-      className="py-24 md:py-32 bg-void border-t border-gold/10 relative overflow-hidden"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <RevealOnScroll direction="down">
-          <div className="flex flex-col items-center text-center mb-14 md:mb-20">
-            <h2 className="font-display text-3xl sm:text-5xl md:text-6xl text-stone-100 tracking-[0.2em] uppercase mb-4 text-glow-white">
-              Biblioteca & <span className="text-gold text-glow-gold">Blog</span>
-            </h2>
-
-            <div className="flex items-center justify-center gap-4 w-full mb-5">
-              <div className="h-px bg-gold/30 w-10 md:w-16"></div>
-              <p className="text-[0.55rem] md:text-[0.65rem] text-gold tracking-[0.4em] uppercase font-bold text-center text-glow-gold">
-                Archivo Histórico · esgrimacriolla.blogspot.com
-              </p>
-              <div className="h-px bg-gold/30 w-10 md:w-16"></div>
-            </div>
-
-            <p className="font-serif italic text-stone-400 text-sm md:text-base max-w-2xl leading-relaxed">
-              Investigaciones históricas, estudio de armas gauchas y artículos publicados en el blog oficial de Esgrima Criolla.
-            </p>
-          </div>
-        </RevealOnScroll>
-
-        {/* 3 Featured Blog Articles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
-          {featuredThree.map((post, idx) => (
-            <RevealOnScroll
-              key={post.id}
-              delay={idx * 120}
-              direction={idx % 2 === 0 ? 'left' : 'right'}
-            >
-              <article
-                onClick={() => onOpenLibrary(post.id)}
-                className="bg-card-depth border border-gold/15 rounded-sm overflow-hidden group cursor-pointer hover:border-gold/50 transition-all duration-500 flex flex-col h-full shadow-2xl"
-              >
-                <div className="relative h-56 overflow-hidden bg-black border-b border-gold/10">
-                  <img
-                    src={post.coverImage}
-                    alt={post.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover filter sepia-[0.2] contrast-110 opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                </div>
-
-                <div className="p-6 md:p-8 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 text-[0.6rem] font-display tracking-[0.22em] text-gold/80 uppercase mb-3">
-                    <span>{post.category}</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="text-stone-400">{post.publishedDate}</span>
-                  </div>
-
-                  <h3 className="font-display text-lg md:text-xl text-stone-100 uppercase tracking-[0.12em] mb-4 group-hover:text-gold transition-colors leading-snug">
-                    {post.title}
-                  </h3>
-
-                  <p className="font-serif italic text-stone-400 text-xs md:text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
-                    {post.summary}
-                  </p>
-
-                  <div className="pt-4 border-t border-gold/10 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 text-gold font-display text-xs uppercase tracking-[0.28em] font-bold group-hover:text-stone-100 transition-colors">
-                      <BookOpen className="w-3.5 h-3.5" />
-                      Leer Artículo
-                    </span>
-                    <span className="material-icons-outlined text-gold text-sm group-hover:translate-x-1 transition-transform">
-                      east
-                    </span>
-                  </div>
-                </div>
-              </article>
-            </RevealOnScroll>
-          ))}
-        </div>
-
-        {/* Button to see all articles */}
-        <RevealOnScroll delay={200}>
-          <div className="flex items-center justify-center">
-            <button
-              onClick={() => onOpenLibrary()}
-              className="px-10 py-5 bg-gold text-void font-display font-black text-xs md:text-sm uppercase tracking-[0.28em] hover:bg-stone-100 transition-all shadow-[0_0_35px_rgba(197,160,101,0.3)] rounded-sm cursor-pointer flex items-center justify-center gap-3"
-            >
-              <BookOpen className="w-4 h-4 shrink-0" />
-              VER TODOS LOS ARTÍCULOS DEL BLOG ({posts.length})
-            </button>
-          </div>
-        </RevealOnScroll>
-      </div>
-    </section>
-  );
-};
-
 interface BibliotecaBlogProps {
   onBack: () => void;
   initialPostId?: string | null;
 }
 
 /**
- * Full Dedicated View: All Articles from esgrimacriolla.blogspot.com + Clean Minimalist Reader
+ * Biblioteca Histórica & Archivo de Artículos del Maestro Jorge Prina
  */
 const BibliotecaBlog: React.FC<BibliotecaBlogProps> = ({
   onBack,
@@ -198,59 +79,66 @@ const BibliotecaBlog: React.FC<BibliotecaBlogProps> = ({
 
   const relatedPosts = useMemo(() => {
     if (!activePost) return [];
-    return posts.filter((p) => p.id !== activePost.id).slice(0, 6);
+    return posts.filter((p) => p.id !== activePost.id).slice(0, 3);
   }, [posts, activePost]);
 
-  // --- CLEAN ARTICLE READER VIEW ---
+  const showFeaturedLead =
+    selectedCategory === 'Todos' && !searchQuery.trim() && filteredPosts.length > 1;
+  const featuredPost = showFeaturedLead ? filteredPosts[0] : null;
+  const gridPosts = showFeaturedLead ? filteredPosts.slice(1) : filteredPosts;
+
+  // --- LECTURA CÓMODA DE ARTÍCULO ---
   if (activePost) {
     return (
-      <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-28 pb-28 overflow-x-hidden relative">
+      <div className="min-h-screen bg-void text-stone-200 selection:bg-gold selection:text-void paper-texture pt-20 md:pt-28 pb-24 overflow-x-hidden relative">
         <div className="fixed inset-0 pointer-events-none z-40 bg-grain opacity-5 mix-blend-overlay"></div>
 
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
-          {/* Top Navigation Bar inside Reader */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-10 pb-4 border-b border-gold/15">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+          {/* Barra superior de lectura */}
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-6 md:mb-8 pb-4 border-b border-gold/15">
             <button
+              type="button"
               onClick={() => setActivePostId(null)}
-              className="group inline-flex items-center gap-2.5 text-stone-400 hover:text-gold transition-colors cursor-pointer font-display text-xs uppercase tracking-[0.22em] font-bold"
+              className="min-h-[44px] group inline-flex items-center gap-2 text-stone-200 hover:text-gold transition-colors cursor-pointer font-display text-sm font-semibold"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform text-gold" />
-              <span>Volver a Todos los Artículos</span>
+              <span>Volver a la Biblioteca</span>
             </button>
 
             <a
               href={activePost.originalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-gold hover:text-stone-100 transition-colors font-display text-xs uppercase tracking-[0.22em] font-bold"
+              className="min-h-[44px] inline-flex items-center gap-1.5 text-gold hover:text-stone-100 transition-colors font-sans text-sm font-medium"
             >
-              <span>Ver en Blogspot Original</span>
+              <span>Publicación original</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
 
-          {/* Article Container */}
-          <article className="bg-card-depth border border-gold/15 p-6 sm:p-10 md:p-14 rounded-sm mb-14 shadow-2xl">
-            <div className="flex flex-wrap items-center gap-2 text-xs font-display tracking-[0.22em] text-gold uppercase mb-4">
-              <span>{activePost.category}</span>
+          {/* Artículo */}
+          <article className="bg-card-depth border border-gold/15 p-6 sm:p-10 md:p-12 rounded-lg mb-12 shadow-2xl">
+            <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-sans text-stone-300 mb-3">
+              <span className="text-gold font-semibold">{activePost.category}</span>
               <span aria-hidden="true">·</span>
-              <span className="text-stone-400">{activePost.publishedDate}</span>
+              <span>{activePost.publishedDate}</span>
               <span aria-hidden="true">·</span>
-              <span className="text-stone-400">{activePost.readingTimeMinutes} MIN DE LECTURA</span>
+              <span className="inline-flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-gold/80" />
+                {activePost.readingTimeMinutes} min de lectura
+              </span>
             </div>
 
-            <h1 className="font-display text-2xl sm:text-4xl md:text-5xl text-stone-100 uppercase tracking-[0.1em] leading-tight mb-6 font-bold text-glow-white">
+            <h1 className="font-display text-2xl sm:text-4xl font-bold text-stone-100 tracking-tight leading-tight mb-4">
               {activePost.title}
             </h1>
 
-            <div className="flex flex-wrap items-center gap-3 text-xs font-display tracking-[0.25em] text-stone-400 uppercase mb-8 pb-6 border-b border-gold/10">
-              <span>POR {activePost.author}</span>
-              <span aria-hidden="true">·</span>
-              <span>ESGRIMA CRIOLLA</span>
-            </div>
+            <p className="text-sm text-stone-300 font-sans mb-7 pb-6 border-b border-gold/15">
+              Escrito por <span className="text-stone-100 font-semibold">{activePost.author}</span> · Archivo de Esgrima Criolla
+            </p>
 
-            {/* Cover Image */}
-            <div className="relative w-full aspect-video mb-10 overflow-hidden bg-black border border-gold/15 rounded-sm">
+            {/* Imagen de portada */}
+            <div className="relative w-full aspect-video mb-8 overflow-hidden bg-black border border-gold/15 rounded-md">
               <img
                 src={activePost.coverImage}
                 alt={activePost.title}
@@ -259,63 +147,64 @@ const BibliotecaBlog: React.FC<BibliotecaBlogProps> = ({
               />
             </div>
 
-            {/* Main Editorial Reading Column */}
+            {/* Cuerpo de lectura */}
             <div
-              className="max-w-2xl mx-auto font-serif text-stone-200 text-base md:text-lg leading-relaxed md:leading-loose space-y-6
-                [&>h3]:font-display [&>h3]:text-xl [&>h3]:md:text-2xl [&>h3]:text-gold [&>h3]:uppercase [&>h3]:tracking-[0.15em] [&>h3]:pt-6 [&>h3]:pb-2 [&>h3]:font-bold
-                [&>blockquote]:my-8 [&>blockquote]:p-6 [&>blockquote]:border-y [&>blockquote]:border-gold/20 [&>blockquote]:text-gold [&>blockquote]:italic [&>blockquote]:text-center [&>blockquote]:text-lg"
+              className="font-sans text-stone-200 text-base sm:text-[1.0625rem] leading-relaxed sm:leading-[1.85] space-y-5
+                [&>h3]:font-display [&>h3]:text-xl [&>h3]:sm:text-2xl [&>h3]:text-gold [&>h3]:pt-5 [&>h3]:pb-1 [&>h3]:font-bold [&>h3]:tracking-tight
+                [&>blockquote]:my-7 [&>blockquote]:px-5 [&>blockquote]:py-4 [&>blockquote]:border-y [&>blockquote]:border-gold/25 [&>blockquote]:text-stone-100 [&>blockquote]:text-base [&>blockquote]:sm:text-lg [&>blockquote]:font-medium"
               dangerouslySetInnerHTML={{ __html: activePost.contentHtml }}
             />
 
-            {/* Footer Link to Original Entry */}
-            <div className="mt-12 pt-6 border-t border-gold/15 flex flex-wrap items-center justify-between gap-4 text-xs font-display tracking-[0.25em] text-stone-400 uppercase">
-              <span>FUENTE: ESGRIMACRIOLLA.BLOGSPOT.COM</span>
+            <div className="mt-10 pt-6 border-t border-gold/15 flex flex-wrap items-center justify-between gap-4 text-sm text-stone-300">
+              <span>Archivo histórico recuperado del blog original</span>
               <a
                 href={activePost.originalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gold hover:underline inline-flex items-center gap-1.5 font-bold"
+                className="text-gold hover:underline inline-flex items-center gap-1.5 font-semibold"
               >
-                <span>Abrir Entrada Original en Blogger</span>
+                <span>Ver entrada en Blogger</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
           </article>
 
-          {/* More Articles from the Blog */}
+          {/* Más artículos para seguir leyendo */}
           {relatedPosts.length > 0 && (
             <div>
-              <div className="flex items-center justify-between mb-8">
-                <h4 className="font-display text-xl md:text-2xl text-stone-100 uppercase tracking-[0.18em]">
-                  Más Artículos del Blog
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="font-display text-xl sm:text-2xl font-bold text-stone-100">
+                  Seguir leyendo
                 </h4>
                 <button
+                  type="button"
                   onClick={() => setActivePostId(null)}
-                  className="text-gold font-display text-xs uppercase tracking-[0.25em] hover:underline cursor-pointer font-bold"
+                  className="text-gold font-display text-sm font-semibold hover:underline cursor-pointer"
                 >
-                  Ver Todos ({posts.length})
+                  Ver todos ({posts.length})
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {relatedPosts.map((rel) => (
-                  <div
+                  <button
                     key={rel.id}
+                    type="button"
                     onClick={() => setActivePostId(rel.id)}
-                    className="bg-card-depth border border-gold/15 p-5 rounded-sm cursor-pointer hover:border-gold/50 transition-all group flex flex-col justify-between"
+                    className="text-left bg-card-depth border border-gold/15 p-5 rounded-md cursor-pointer hover:border-gold/50 transition-all group flex flex-col justify-between"
                   >
                     <div>
-                      <span className="font-display text-[0.55rem] tracking-[0.25em] text-gold/80 uppercase font-bold block mb-2">
-                        {rel.publishedDate}
+                      <span className="text-xs text-gold font-medium block mb-1.5">
+                        {rel.category} · {rel.publishedDate}
                       </span>
-                      <h5 className="font-display text-base text-stone-100 uppercase tracking-[0.1em] group-hover:text-gold transition-colors mb-3">
+                      <h5 className="font-display text-base font-bold text-stone-100 group-hover:text-gold transition-colors mb-3 leading-snug">
                         {rel.title}
                       </h5>
                     </div>
-                    <span className="font-display text-[0.6rem] uppercase tracking-[0.25em] text-gold/80 group-hover:text-stone-100 inline-flex items-center gap-1.5 font-bold">
-                      Leer Artículo <span className="material-icons-outlined text-xs">east</span>
+                    <span className="text-xs font-semibold text-gold inline-flex items-center gap-1">
+                      Leer artículo <ArrowRight className="w-3.5 h-3.5" />
                     </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -325,158 +214,244 @@ const BibliotecaBlog: React.FC<BibliotecaBlogProps> = ({
     );
   }
 
-  // --- FULL BLOG ARCHIVE CATALOG VIEW (ALL ARTICLES) ---
+  // --- VISTA PRINCIPAL DE LA BIBLIOTECA ---
   return (
-    <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-28 pb-24 overflow-x-hidden relative">
+    <div className="min-h-screen bg-void text-stone-200 selection:bg-gold selection:text-void paper-texture pt-20 md:pt-28 pb-24 overflow-x-hidden relative">
       <div className="fixed inset-0 pointer-events-none z-40 bg-grain opacity-5 mix-blend-overlay"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+        {/* Cabecera amena con historia del archivo */}
         <RevealOnScroll>
-          <div className="flex flex-col items-center mb-12 md:mb-16 text-center mx-auto">
+          <div className="mb-10 md:mb-12">
             <button
+              type="button"
               onClick={onBack}
-              className="mb-8 group flex items-center gap-2 text-stone-400 hover:text-gold transition-colors cursor-pointer"
+              className="mb-6 min-h-[44px] group inline-flex items-center gap-2 text-stone-300 hover:text-gold transition-colors cursor-pointer"
             >
-              <span className="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">
-                arrow_back
-              </span>
-              <span className="text-xs font-display font-bold uppercase tracking-[0.25em]">
-                Volver al Inicio
+              <ArrowLeft className="w-4 h-4 text-gold group-hover:-translate-x-1 transition-transform" />
+              <span className="text-sm font-display font-semibold">
+                Volver al inicio
               </span>
             </button>
 
-            <h1 className="font-display text-3xl sm:text-5xl md:text-6xl text-stone-100 tracking-[0.2em] uppercase mb-4 text-center w-full text-glow-white">
-              Biblioteca & Blog
-            </h1>
-
-            <div className="flex items-center justify-center gap-4 w-full mb-6">
-              <div className="h-px bg-gold/30 w-10 md:w-16"></div>
-              <p className="text-[0.55rem] md:text-[0.65rem] text-gold tracking-[0.4em] uppercase font-bold text-center text-glow-gold">
-                Archivo Oficial · esgrimacriolla.blogspot.com
+            <div className="max-w-3xl mb-7">
+              <p className="text-xs sm:text-sm text-gold uppercase tracking-[0.14em] font-semibold mb-2">
+                Archivo Histórico y Cultural
               </p>
-              <div className="h-px bg-gold/30 w-10 md:w-16"></div>
+              <h1 className="font-display text-3xl sm:text-5xl md:text-6xl font-bold text-stone-100 tracking-tight leading-[1.08] mb-3">
+                Biblioteca de Esgrima Criolla
+              </h1>
+              <p className="text-base sm:text-lg text-stone-300 leading-relaxed">
+                Un espacio de lectura para conocer las raíces, la historia y el pensamiento detrás de nuestra disciplina.
+              </p>
             </div>
 
-            {/* Search + Category Filter Bar */}
-            <div className="w-full max-w-5xl bg-card-depth border border-gold/15 p-5 sm:p-6 rounded-sm flex flex-col gap-5 shadow-2xl mt-4">
-              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-                <div className="relative flex-1">
-                  <Search className="w-4 h-4 text-gold absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Buscar en todos los artículos del blog (ej. facón, visteo, poncho, rebenque)..."
-                    className="w-full pl-11 pr-4 py-3 bg-void border border-gold/20 rounded-sm text-stone-100 placeholder-stone-500 font-serif text-sm focus:outline-none focus:border-gold"
-                  />
+            {/* Nota editorial sobre el origen del blog de Jorge Prina */}
+            <div className="bg-card-depth border border-gold/25 rounded-lg p-6 sm:p-8 shadow-xl">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div className="space-y-3 max-w-3xl">
+                  <p className="font-display text-sm font-semibold text-gold flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 shrink-0" />
+                    <span>De aquel primer blog a nuestra nueva casa</span>
+                  </p>
+                  <p className="font-sans text-stone-200 text-sm sm:text-base leading-relaxed">
+                    Esta biblioteca nació hace muchos años en un blog personal donde el <strong className="text-stone-100 font-semibold">Maestro Jorge Prina</strong> empezó a escribir y publicar artículos para difundir la Esgrima Criolla, compartir sus investigaciones y mantener viva la cultura del facón cuando casi no existía material al alcance del público.
+                  </p>
+                  <p className="font-sans text-stone-300 text-sm sm:text-base leading-relaxed">
+                    Para que todo ese legado no se pierda y sea más fácil de recorrer, reunimos y trajimos aquellos escritos a esta nueva página: un archivo abierto, ordenado y pensado para leer con calma.
+                  </p>
                 </div>
 
-                <a
-                  href="https://esgrimacriolla.blogspot.com/?zx=ce8a900e74a110d"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-5 py-3 bg-void border border-gold/30 hover:border-gold text-gold hover:bg-gold/10 font-display text-xs uppercase tracking-[0.22em] font-bold rounded-sm transition-all flex items-center justify-center gap-2 whitespace-nowrap shrink-0"
-                >
-                  <span>Abrir Blogspot Original</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-gold/10">
-                <div className="flex flex-wrap items-center gap-2">
-                  {categories.map((category) => {
-                    const isActive = selectedCategory === category;
-                    return (
-                      <button
-                        key={category}
-                        type="button"
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-3.5 py-1.5 font-display text-[0.6rem] uppercase tracking-[0.2em] font-bold rounded-sm transition-all cursor-pointer whitespace-nowrap ${
-                          isActive
-                            ? 'bg-gold text-void'
-                            : 'bg-void text-stone-400 border border-gold/15 hover:border-gold/40 hover:text-gold'
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    );
-                  })}
+                <div className="lg:border-l lg:border-gold/15 lg:pl-6 flex flex-row lg:flex-col items-center lg:items-start justify-between gap-3 shrink-0">
+                  <div>
+                    <p className="font-display text-2xl font-bold text-stone-100 tabular-nums">
+                      {posts.length}
+                    </p>
+                    <p className="text-xs sm:text-sm text-stone-300">
+                      Artículos recuperados
+                    </p>
+                  </div>
+                  <a
+                    href="https://esgrimacriolla.blogspot.com/?zx=ce8a900e74a110d"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-gold hover:underline whitespace-nowrap"
+                  >
+                    <span>Ver blog original</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
-
-                <span className="font-display text-[0.58rem] tracking-[0.25em] text-stone-400 uppercase">
-                  {isLoadingFeed
-                    ? 'CARGANDO ARCHIVO DEL BLOG...'
-                    : `${filteredPosts.length} ${filteredPosts.length === 1 ? 'ARTÍCULO' : 'ARTÍCULOS'}`}
-                </span>
               </div>
             </div>
           </div>
         </RevealOnScroll>
 
-        {/* Empty State */}
+        {/* Barra limpia de búsqueda y categorías */}
+        <div className="mb-10 flex flex-col gap-4 pb-6 border-b border-gold/15">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar por tema (ej. facón, poncho, visteo)..."
+                className="w-full min-h-[46px] pl-10 pr-4 py-2.5 bg-card-depth border border-gold/25 rounded-md text-stone-100 placeholder-stone-400 font-sans text-sm focus:outline-none focus:border-gold"
+              />
+            </div>
+
+            <span className="text-xs sm:text-sm text-stone-300 font-sans">
+              {isLoadingFeed
+                ? 'Actualizando archivo...'
+                : `Mostrando ${filteredPosts.length} ${filteredPosts.length === 1 ? 'artículo' : 'artículos'}`}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto flex-nowrap sm:flex-wrap no-scrollbar pb-1 sm:pb-0">
+            {categories.map((category) => {
+              const isActive = selectedCategory === category;
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setSelectedCategory(category)}
+                  className={`min-h-[38px] px-3.5 py-1.5 font-display text-xs sm:text-sm font-semibold rounded-md transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
+                    isActive
+                      ? 'bg-gold text-void'
+                      : 'bg-card-depth text-stone-200 border border-gold/20 hover:border-gold/50 hover:text-gold'
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Estado vacío */}
         {filteredPosts.length === 0 ? (
-          <div className="bg-card-depth border border-gold/15 max-w-2xl mx-auto p-10 text-center my-12 rounded-sm">
-            <h3 className="font-display text-2xl text-stone-100 uppercase tracking-[0.15em] mb-3">
-              No se encontraron artículos con esa búsqueda
+          <div className="bg-card-depth border border-gold/15 max-w-xl mx-auto p-10 text-center my-10 rounded-lg">
+            <h3 className="font-display text-xl sm:text-2xl font-bold text-stone-100 mb-2">
+              No encontramos artículos con esa búsqueda
             </h3>
-            <p className="font-serif italic text-stone-400 text-sm mb-6">
-              Probá con otro término o restablecé los filtros para ver todos los artículos del blog.
+            <p className="font-sans text-stone-300 text-sm sm:text-base mb-6">
+              Probá con otra palabra o volvé a ver toda la colección.
             </p>
             <button
+              type="button"
               onClick={() => {
                 setSearchQuery('');
                 setSelectedCategory('Todos');
               }}
-              className="px-6 py-3 bg-gold text-void font-display text-xs uppercase tracking-[0.25em] font-black rounded-sm cursor-pointer"
+              className="min-h-[44px] px-6 py-2.5 bg-gold text-void font-display text-sm font-bold rounded-md cursor-pointer"
             >
-              Ver Todos los Artículos
+              Ver todos los artículos
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPosts.map((post) => (
+          <div className="space-y-10">
+            {/* Artículo Destacado (para entrar leyendo con ganas) */}
+            {featuredPost && (
               <article
-                key={post.id}
-                onClick={() => setActivePostId(post.id)}
-                className="bg-card-depth border border-gold/15 rounded-sm overflow-hidden group cursor-pointer hover:border-gold/50 transition-all duration-500 flex flex-col h-full shadow-2xl"
+                onClick={() => setActivePostId(featuredPost.id)}
+                className="bg-card-depth border border-gold/25 hover:border-gold/55 rounded-lg overflow-hidden cursor-pointer group transition-all shadow-2xl grid grid-cols-1 lg:grid-cols-12 items-stretch"
               >
-                <div className="relative h-56 overflow-hidden bg-black border-b border-gold/10">
+                <div className="lg:col-span-6 relative min-h-[240px] sm:min-h-[300px] bg-black overflow-hidden">
                   <img
-                    src={post.coverImage}
-                    alt={post.title}
+                    src={featuredPost.coverImage}
+                    alt={featuredPost.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover filter sepia-[0.2] contrast-110 opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 </div>
 
-                <div className="p-6 md:p-8 flex flex-col flex-grow">
-                  <div className="flex items-center gap-2 text-[0.6rem] font-display tracking-[0.22em] text-gold/80 uppercase mb-3">
-                    <span>{post.category}</span>
-                    <span aria-hidden="true">·</span>
-                    <span className="text-stone-400">{post.publishedDate}</span>
+                <div className="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs sm:text-sm font-sans text-stone-300 mb-3">
+                      <span className="text-gold font-semibold">Lectura recomendada</span>
+                      <span className="mx-2" aria-hidden="true">·</span>
+                      <span>{featuredPost.category}</span>
+                      <span className="mx-2" aria-hidden="true">·</span>
+                      <span>{featuredPost.readingTimeMinutes} min</span>
+                    </p>
+
+                    <h2 className="font-display text-2xl sm:text-3xl font-bold text-stone-100 group-hover:text-gold transition-colors leading-snug mb-4">
+                      {featuredPost.title}
+                    </h2>
+
+                    <p className="font-sans text-stone-200 text-sm sm:text-base leading-relaxed mb-6 line-clamp-4">
+                      {featuredPost.summary}
+                    </p>
                   </div>
 
-                  <h3 className="font-display text-lg md:text-xl text-stone-100 uppercase tracking-[0.12em] mb-4 group-hover:text-gold transition-colors leading-snug">
-                    {post.title}
-                  </h3>
-
-                  <p className="font-serif italic text-stone-400 text-xs md:text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
-                    {post.summary}
-                  </p>
-
-                  <div className="pt-4 border-t border-gold/10 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 text-gold font-display text-xs uppercase tracking-[0.28em] font-bold group-hover:text-stone-100 transition-colors">
-                      <BookOpen className="w-3.5 h-3.5" />
-                      Leer Artículo
+                  <div className="pt-4 border-t border-gold/15 flex items-center justify-between">
+                    <span className="text-xs sm:text-sm text-stone-300">
+                      {featuredPost.author} · {featuredPost.publishedDate}
                     </span>
-                    <span className="material-icons-outlined text-gold text-sm group-hover:translate-x-1 transition-transform">
-                      east
+                    <span className="inline-flex items-center gap-1.5 text-gold font-display text-sm font-semibold group-hover:translate-x-0.5 transition-transform">
+                      Leer artículo <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
                 </div>
               </article>
-            ))}
+            )}
+
+            {/* Grilla limpia y aireada del resto de artículos */}
+            {gridPosts.length > 0 && (
+              <div>
+                {showFeaturedLead && (
+                  <h2 className="font-display text-xl sm:text-2xl font-bold text-stone-100 mb-6">
+                    Más artículos de la Biblioteca
+                  </h2>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-7">
+                  {gridPosts.map((post) => (
+                    <article
+                      key={post.id}
+                      onClick={() => setActivePostId(post.id)}
+                      className="bg-card-depth border border-gold/15 rounded-lg overflow-hidden group cursor-pointer hover:border-gold/50 transition-all duration-300 flex flex-col h-full shadow-xl"
+                    >
+                      <div className="relative h-48 sm:h-52 overflow-hidden bg-black border-b border-gold/10">
+                        <img
+                          src={post.coverImage}
+                          alt={post.title}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover opacity-85 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      </div>
+
+                      <div className="p-5 sm:p-6 flex flex-col flex-grow">
+                        <div className="flex items-center gap-2 text-xs font-sans text-stone-300 mb-2.5">
+                          <span className="text-gold font-semibold">{post.category}</span>
+                          <span aria-hidden="true">·</span>
+                          <span>{post.publishedDate}</span>
+                          <span aria-hidden="true">·</span>
+                          <span>{post.readingTimeMinutes} min</span>
+                        </div>
+
+                        <h3 className="font-display text-lg sm:text-xl font-bold text-stone-100 mb-2.5 group-hover:text-gold transition-colors leading-snug">
+                          {post.title}
+                        </h3>
+
+                        <p className="font-sans text-stone-300 text-sm leading-relaxed line-clamp-3 mb-5 flex-grow">
+                          {post.summary}
+                        </p>
+
+                        <div className="pt-4 border-t border-gold/10 flex items-center justify-between">
+                          <span className="inline-flex items-center gap-1.5 text-gold font-display text-sm font-semibold group-hover:text-stone-100 transition-colors">
+                            Leer artículo
+                          </span>
+                          <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

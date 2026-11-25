@@ -11,11 +11,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature }) => {
       <div className="mb-6 p-4 md:mb-8 md:p-5 rounded-full bg-void/50 shadow-inner text-gold/70 group-hover:text-gold transition-all duration-500 border border-gold/10">
         <span className="material-icons-outlined text-2xl md:text-4xl">{feature.icon}</span>
       </div>
-      <h3 className="font-display text-base md:text-lg text-stone-100 mb-3 md:mb-4 tracking-[0.25em] uppercase group-hover:text-gold transition-colors duration-500">
+      <h3 className="font-display text-lg md:text-xl font-bold text-stone-100 mb-3 tracking-tight group-hover:text-gold transition-colors duration-500">
         {feature.title}
       </h3>
-      <div className="w-8 h-px bg-gold/30 mb-4 md:mb-6 group-hover:w-16 transition-all duration-700"></div>
-      <p className="text-xs md:text-sm font-serif text-stone-400 leading-relaxed max-w-xs mx-auto group-hover:text-stone-300 transition-colors">
+      <div className="w-8 h-px bg-gold/35 mb-4 group-hover:w-16 transition-all duration-700"></div>
+      <p className="text-sm md:text-[0.95rem] font-sans text-stone-200 leading-relaxed max-w-xs mx-auto transition-colors">
         {feature.description}
       </p>
     </div>

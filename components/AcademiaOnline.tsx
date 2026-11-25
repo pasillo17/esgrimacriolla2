@@ -38,28 +38,29 @@ const COURSES = [
 
 const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack, onOpenVisteador }) => {
   return (
-    <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-24 pb-12 overflow-x-hidden">
+    <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-20 md:pt-28 pb-20 overflow-x-hidden">
       {/* Vignette Overlay */}
-      <div className="fixed inset-0 pointer-events-none z-50 vignette-overlay opacity-60"></div>
+      <div className="fixed inset-0 pointer-events-none z-50 vignette-overlay opacity-60 hidden md:block"></div>
       
       {/* Grain Overlay */}
       <div className="fixed inset-0 pointer-events-none z-40 bg-grain opacity-5 mix-blend-overlay"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <RevealOnScroll>
-          <div className="flex flex-col items-center mb-12 md:mb-16 text-center mx-auto">
-            <button 
-              onClick={onBack} 
-              className="mb-8 group flex items-center gap-2 text-stone-500 hover:text-gold transition-colors cursor-pointer"
+          <div className="flex flex-col items-center mb-10 md:mb-16 text-center mx-auto">
+            <button
+              type="button"
+              onClick={onBack}
+              className="mb-6 min-h-[44px] px-3 group flex items-center gap-2 text-stone-400 hover:text-gold transition-colors cursor-pointer"
             >
               <span className="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
               <span className="text-xs font-display font-bold uppercase tracking-[0.2em]">Volver al Inicio</span>
             </button>
             
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-stone-100 tracking-[0.2em] md:tracking-[0.3em] uppercase mb-4 text-center w-full">Aprende de Manera Online</h2>
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl text-stone-100 tracking-[0.14em] md:tracking-[0.3em] uppercase mb-3 text-center w-full">Aprende de Manera Online</h2>
             <div className="flex items-center justify-center gap-4 w-full">
               <div className="h-px bg-gold/30 w-8 md:w-12"></div>
-              <p className="text-[0.5rem] md:text-[0.6rem] text-gold tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold text-center">Formación a Distancia</p>
+              <p className="text-[0.58rem] md:text-[0.6rem] text-gold tracking-[0.3em] md:tracking-[0.5em] uppercase font-bold text-center">Formación a Distancia</p>
               <div className="h-px bg-gold/30 w-8 md:w-12"></div>
             </div>
           </div>
@@ -68,14 +69,14 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack, onOpenVisteador
         {/* Nuevo Curso Destacado: De Cero a Visteador */}
         {onOpenVisteador && (
           <RevealOnScroll delay={50}>
-            <div className="mb-14 md:mb-16 max-w-5xl mx-auto bg-[#1C1E21] border border-[#2B6592]/70 rounded-sm overflow-hidden shadow-2xl">
+            <div className="mb-12 md:mb-16 max-w-5xl mx-auto bg-[#1C1E21] border border-[#2B6592]/70 rounded-sm overflow-hidden shadow-2xl">
               <div className="h-1 w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
-              <div className="p-6 sm:p-8 md:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+              <div className="p-5 sm:p-8 md:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
                 <div className="text-left max-w-2xl">
-                  <p className="font-display text-xs uppercase tracking-[0.26em] text-[#6BA8D9] mb-2">
+                  <p className="font-display text-xs uppercase tracking-[0.22em] text-[#6BA8D9] mb-2">
                     CURSO ONLINE • DESDE CERO · MAESTRO JORGE PRINA
                   </p>
-                  <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-[0.08em] text-[#F2EFE9] mb-3">
+                  <h3 className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-[0.06em] text-[#F2EFE9] mb-2.5">
                     De Cero a Visteador
                   </h3>
                   <p className="font-serif text-sm sm:text-base text-[#D8D3CA] leading-relaxed">
@@ -86,7 +87,7 @@ const AcademiaOnline: React.FC<AcademiaOnlineProps> = ({ onBack, onOpenVisteador
                 <button
                   type="button"
                   onClick={onOpenVisteador}
-                  className="w-full lg:w-auto flex-shrink-0 px-7 py-4 bg-[#2B6592] hover:bg-[#3475A8] text-[#F2EFE9] font-display text-xs sm:text-sm font-bold uppercase tracking-[0.2em] rounded-sm border border-[#6BA8D9]/45 transition-colors cursor-pointer whitespace-nowrap flex items-center justify-center gap-2"
+                  className="w-full lg:w-auto min-h-[50px] flex-shrink-0 px-7 py-3.5 bg-[#2B6592] hover:bg-[#3475A8] text-[#F2EFE9] font-display text-xs sm:text-sm font-bold uppercase tracking-[0.18em] rounded-sm border border-[#6BA8D9]/45 transition-colors cursor-pointer whitespace-nowrap flex items-center justify-center gap-2"
                 >
                   <span>Ver curso e inscribirme</span>
                   <span className="material-icons-outlined text-base">east</span>

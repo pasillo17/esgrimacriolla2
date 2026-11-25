@@ -87,16 +87,21 @@ const ProductGallery: React.FC<{ images: string[]; alt: string }> = ({ images, a
         />
       </AnimatePresence>
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-30">
           {images.map((_, i) => (
             <button
               key={i}
+              type="button"
               onClick={() => setCurrentIndex(i)}
               aria-label={`Ver imagen ${i + 1}`}
-              className={`w-2 h-2 rounded-full transition-colors cursor-pointer ${
-                i === currentIndex ? 'bg-gold' : 'bg-white/30'
-              }`}
-            />
+              className="min-w-[36px] min-h-[36px] flex items-center justify-center cursor-pointer"
+            >
+              <span
+                className={`block h-2 rounded-full transition-all ${
+                  i === currentIndex ? 'w-5 bg-gold' : 'w-2 bg-white/45'
+                }`}
+              />
+            </button>
           ))}
         </div>
       )}
@@ -115,46 +120,47 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-28 pb-24 overflow-x-hidden relative">
+    <div className="min-h-screen bg-void text-stone-300 selection:bg-gold selection:text-void paper-texture pt-20 md:pt-28 pb-24 overflow-x-hidden relative">
       <div className="fixed inset-0 pointer-events-none z-40 bg-grain opacity-5 mix-blend-overlay"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
         <RevealOnScroll>
-          <div className="flex flex-col items-center mb-10 md:mb-16 text-center mx-auto">
+          <div className="flex flex-col items-center mb-8 md:mb-16 text-center mx-auto">
             <button
+              type="button"
               onClick={onBack}
-              className="mb-8 group flex items-center gap-2 text-stone-400 hover:text-gold transition-colors cursor-pointer"
+              className="mb-6 min-h-[44px] px-3 group flex items-center gap-2 text-stone-400 hover:text-gold transition-colors cursor-pointer"
             >
               <span className="material-icons-outlined text-sm group-hover:-translate-x-1 transition-transform">
                 arrow_back
               </span>
-              <span className="text-xs font-display font-bold uppercase tracking-[0.25em]">
+              <span className="text-xs font-display font-bold uppercase tracking-[0.2em]">
                 Volver al Inicio
               </span>
             </button>
 
-            <h2 className="font-display text-3xl sm:text-4xl md:text-6xl text-stone-100 tracking-[0.2em] uppercase mb-4 text-center w-full text-glow-white leading-tight font-bold">
+            <h2 className="font-display text-3xl sm:text-4xl md:text-6xl text-stone-100 tracking-[0.14em] sm:tracking-[0.2em] uppercase mb-3 text-center w-full text-glow-white leading-tight font-bold">
               Tienda Oficial
             </h2>
-            <div className="flex items-center justify-center gap-4 w-full mb-10">
-              <div className="h-px bg-gold/40 w-10 md:w-16"></div>
-              <p className="text-[0.55rem] md:text-[0.65rem] text-gold tracking-[0.4em] md:tracking-[0.5em] uppercase font-bold text-center text-glow-gold">
+            <div className="flex items-center justify-center gap-4 w-full mb-8 md:mb-10">
+              <div className="h-px bg-gold/40 w-8 md:w-16"></div>
+              <p className="text-[0.58rem] md:text-[0.65rem] text-gold tracking-[0.3em] md:tracking-[0.5em] uppercase font-bold text-center text-glow-gold">
                 Indumentaria de Esgrima Criolla
               </p>
-              <div className="h-px bg-gold/40 w-10 md:w-16"></div>
+              <div className="h-px bg-gold/40 w-8 md:w-16"></div>
             </div>
 
             {/* Clean Guarantee Bar */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-4xl bg-card-depth border border-gold/20 p-5 rounded-sm shadow-xl">
-              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.18em] text-stone-200">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-4xl bg-card-depth border border-gold/20 p-4 sm:p-5 rounded-sm shadow-xl">
+              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.16em] text-stone-200">
                 <ShieldCheck className="w-4 h-4 text-gold flex-shrink-0" />
                 <span>Compra Protegida Mercado Libre</span>
               </div>
-              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.18em] text-stone-200 border-y sm:border-y-0 sm:border-x border-gold/15 py-2 sm:py-0">
+              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.16em] text-stone-200 border-y sm:border-y-0 sm:border-x border-gold/15 py-2.5 sm:py-0">
                 <Truck className="w-4 h-4 text-gold flex-shrink-0" />
                 <span>Envíos a Todo el País</span>
               </div>
-              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.18em] text-stone-200">
+              <div className="flex items-center justify-center gap-2.5 text-xs font-display uppercase tracking-[0.16em] text-stone-200">
                 <CreditCard className="w-4 h-4 text-gold flex-shrink-0" />
                 <span>Algodón Peinado 24/1 Premium</span>
               </div>
@@ -162,11 +168,11 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
           </div>
         </RevealOnScroll>
 
-        <div className="relative w-[100vw] left-1/2 -translate-x-1/2 mb-12 md:mb-20">
+        <div className="relative w-full overflow-hidden mb-10 md:mb-20">
           <div className="guardapampa-divider opacity-80 animate-guardapampa"></div>
         </div>
 
-        <div className="flex flex-col gap-16 md:gap-32 max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col gap-12 md:gap-28 max-w-6xl mx-auto sm:px-4">
           {PRODUCTS.map((product, idx) => {
             const currentSize = selectedSizes[product.id] || 'L';
 
@@ -244,7 +250,7 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
                               key={size}
                               type="button"
                               onClick={() => handleSizeSelect(product.id, size)}
-                              className={`py-2.5 font-display text-xs font-black uppercase tracking-[0.2em] border transition-all rounded-sm cursor-pointer ${
+                              className={`min-h-[48px] py-2.5 font-display text-sm font-black uppercase tracking-[0.18em] border transition-all rounded-sm cursor-pointer ${
                                 isSelected
                                   ? 'bg-gold text-void border-gold shadow-[0_0_15px_rgba(212,170,106,0.4)]'
                                   : 'bg-void/70 text-stone-300 border-gold/25 hover:border-gold/60 hover:text-gold'
@@ -261,10 +267,10 @@ const Merch: React.FC<MerchProps> = ({ onBack }) => {
                       href={product.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative overflow-hidden w-full py-4 md:py-5 bg-gold text-void font-display font-black text-xs md:text-sm uppercase tracking-[0.22em] hover:bg-stone-100 transition-colors flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(212,170,106,0.25)] group/btn rounded-sm"
+                      className="relative overflow-hidden w-full min-h-[52px] px-4 py-4 bg-gold text-void font-display font-black text-xs sm:text-sm uppercase tracking-[0.18em] hover:bg-stone-100 transition-colors flex items-center justify-center gap-2 shadow-[0_0_30px_rgba(212,170,106,0.25)] group/btn rounded-sm text-center"
                     >
                       <span className="relative z-10">Comprar Talle {currentSize} en Mercado Libre</span>
-                      <span className="material-icons-outlined relative z-10 group-hover/btn:translate-x-2 transition-transform">
+                      <span className="material-icons-outlined relative z-10 group-hover/btn:translate-x-1 transition-transform shrink-0">
                         shopping_cart
                       </span>
                     </a>

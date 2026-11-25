@@ -1,21 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowLeft,
   ArrowDown,
-  ChevronDown,
   BookOpen,
   ShieldCheck,
   CheckCircle2,
   ExternalLink,
   MessageCircle,
   Mail,
-  Sparkles,
-  Award,
   X,
-  CreditCard,
-  Globe,
   PlayCircle,
+  Clock,
+  Award,
 } from 'lucide-react';
 
 // ============================================================================
@@ -35,120 +32,53 @@ export const COURSE_CONFIG = {
   linkWhatsappSoporte: 'https://wa.me/549XXXXXXXXXX',
 } as const;
 
-interface CurriculumModule {
+interface CourseBlock {
   id: string;
-  code: string;
+  label: string;
   title: string;
-  summary: string;
-  topics: string[];
-  highlightNote?: string;
   isBonus?: boolean;
 }
 
-const CURRICULUM_MODULES: CurriculumModule[] = [
+const COURSE_BLOCKS: CourseBlock[] = [
   {
-    id: 'introduccion',
-    code: '00',
-    title: 'Introducción',
-    summary: 'Bienvenida, equipo de práctica en casa, qué es la Esgrima Criolla y su historia.',
-    topics: [
-      'Bienvenida al curso y metodología de entrenamiento en casa',
-      'Equipo de práctica seguro y económico para entrenar desde cero',
-      'Qué es la Esgrima Criolla y cómo se estructura el sistema',
-      'Historia, origen y raíces del arte marcial argentino',
-    ],
+    id: 'intro',
+    label: 'Introducción',
+    title: 'Bienvenida, equipo de práctica en casa e historia',
   },
   {
-    id: 'modulo-1',
-    code: '01',
-    title: 'Módulo 1: El Hierro, la Postura y el Paso',
-    summary: 'Partes del cuchillo, empuñe criollo, guardia base, compás en cruz, desenvaine + práctica guiada.',
-    topics: [
-      'Partes del cuchillo y características del facón',
-      'Empuñe criollo correcto y sujeción segura',
-      'Guardia base, equilibrio y estructura corporal',
-      'Desplazamiento fundamental: el compás en cruz',
-      'Desenvaine limpio y pasaje a guardia',
-    ],
-    highlightNote: 'Incluye práctica guiada paso a paso',
+    id: 'm1',
+    label: 'Módulo 1',
+    title: 'El Hierro, la Postura y el Paso',
   },
   {
-    id: 'modulo-2',
-    code: '02',
-    title: 'Módulo 2: Cómo Pegar',
-    summary: 'Tiro de punta, tiro de hacha, mecánica de corte, achure, picotazo, planazo y cintarazo + práctica guiada.',
-    topics: [
-      'Tiro de punta y líneas de proyección',
-      'Tiro de hacha y generación de potencia',
-      'Mecánica de corte y ángulos de filo',
-      'Achure y picotazo a distancia corta y media',
-      'Planazo y cintarazo en el repertorio criollo',
-    ],
-    highlightNote: 'Incluye práctica guiada paso a paso',
+    id: 'm2',
+    label: 'Módulo 2',
+    title: 'Cómo Pegar',
   },
   {
-    id: 'modulo-3',
-    code: '03',
-    title: 'Módulo 3: Fluidez de Mano y Combinaciones',
-    summary: 'Molinetes internos y externos, dobletes, tripletes, Serie Primera y Serie La Viborita + práctica guiada.',
-    topics: [
-      'Molinetes internos y externos para soltura de muñeca',
-      'Encadenamiento de dobletes y tripletes',
-      'Desarrollo completo de la Serie Primera',
-      'Desarrollo completo de la Serie La Viborita',
-    ],
-    highlightNote: 'Incluye práctica guiada paso a paso',
+    id: 'm3',
+    label: 'Módulo 3',
+    title: 'Fluidez de Mano y Combinaciones',
   },
   {
-    id: 'modulo-4',
-    code: '04',
-    title: 'Módulo 4: El Poncho',
-    summary: 'Enrolle básico y medio, guardia de poncho y facón, defensa activa, flecazo, manteada, enterrada y pisar el poncho + práctica guiada.',
-    topics: [
-      'Enrolle básico y enrollado medio del poncho',
-      'Guardia combinada de poncho y facón',
-      'Defensa activa y control de la línea de ataque',
-      'Técnicas clásicas: flecazo, manteada y enterrada',
-      'Recursos avanzados: pisar el poncho y salidas',
-    ],
-    highlightNote: 'Incluye práctica guiada paso a paso',
+    id: 'm4',
+    label: 'Módulo 4',
+    title: 'El Poncho',
   },
   {
-    id: 'modulo-5',
-    code: '05',
-    title: 'Módulo 5: El Visteo y las Destrezas de Esquive',
-    summary: 'Esquives de tronco y cabeza, barridas, saltos criollos, topada y retirada.',
-    topics: [
-      'Esquives de tronco y cabeza sin perder la postura',
-      'Barridas y lectura de distancia en el visteo',
-      'Saltos criollos y cambios de ángulo',
-      'Topada, cierre de distancia y retirada controlada',
-    ],
+    id: 'm5',
+    label: 'Módulo 5',
+    title: 'El Visteo y las Destrezas de Esquive',
   },
   {
-    id: 'modulo-6',
-    code: '06',
-    title: 'Módulo 6 (Teórico): Técnica, Táctica y Estrategia',
-    summary: 'Mentalidad del visteador, tipos de ataque, tiempos, "cada cuchillo para cada pelea" y qué no hacer en un visteo.',
-    topics: [
-      'Mentalidad del visteador y lectura del oponente',
-      'Tipos de ataque y manejo de los tiempos de combate',
-      'Principio táctico: "cada cuchillo para cada pelea"',
-      'Errores críticos y qué no hacer en un visteo',
-    ],
+    id: 'm6',
+    label: 'Módulo 6 · Teórico',
+    title: 'Técnica, Táctica y Estrategia',
   },
   {
-    id: 'modulo-bonus',
-    code: 'BONUS',
-    title: 'Módulo Bonus Incluido',
-    summary: 'Acondicionamiento físico criollo, legislación sobre portación de arma blanca en Argentina y primeros auxilios ante heridas de arma blanca + Libro Digital de regalo.',
-    topics: [
-      'Acondicionamiento físico criollo aplicado al entrenamiento en casa',
-      'Legislación vigente sobre portación de arma blanca en Argentina',
-      'Primeros auxilios esenciales ante heridas de arma blanca',
-      'Libro Digital de Esgrima Criolla de regalo con tu inscripción',
-    ],
-    highlightNote: 'Incluido sin costo adicional + Libro Digital de regalo',
+    id: 'bonus',
+    label: 'Bonus Incluido',
+    title: 'Acondicionamiento, Legislación, Primeros Auxilios + Libro Digital',
     isBonus: true,
   },
 ];
@@ -158,126 +88,87 @@ interface CursoVisteadorProps {
 }
 
 const CursoVisteador: React.FC<CursoVisteadorProps> = ({ onBack }) => {
-  const [openModules, setOpenModules] = useState<string[]>(['introduccion']);
   const [coverError, setCoverError] = useState(false);
+  const [isCheckoutVisible, setIsCheckoutVisible] = useState(false);
 
-  const toggleModule = (id: string) => {
-    setOpenModules((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+  const inscripcionRef = useRef<HTMLElement | null>(null);
+  const recorridoRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const checkoutEl = inscripcionRef.current;
+    if (!checkoutEl || typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]) {
+          setIsCheckoutVisible(entries[0].isIntersecting);
+        }
+      },
+      { threshold: 0.12 }
     );
+
+    observer.observe(checkoutEl);
+    return () => observer.disconnect();
+  }, []);
+
+  const scrollToCheckout = () => {
+    inscripcionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
-  const allExpanded = openModules.length === CURRICULUM_MODULES.length;
-
-  const toggleAllModules = () => {
-    if (allExpanded) {
-      setOpenModules([]);
-    } else {
-      setOpenModules(CURRICULUM_MODULES.map((m) => m.id));
-    }
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const target = document.getElementById(sectionId);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  const scrollToRecorrido = () => {
+    recorridoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const hasCoverImage = Boolean(COURSE_CONFIG.portadaImagen.trim()) && !coverError;
 
   return (
-    <div className="min-h-screen bg-[#1C1E21] text-[#F2EFE9] selection:bg-[#2B6592] selection:text-[#F2EFE9] pt-24 md:pt-28 pb-20 relative z-20">
-      {/* Subtle athletic radial lighting (dark charcoal & Azul Patria) */}
-      <div
-        className="pointer-events-none fixed inset-0 z-0 opacity-70"
-        style={{
-          background:
-            'radial-gradient(circle at 18% 12%, rgba(43, 101, 146, 0.14) 0%, transparent 45%), radial-gradient(circle at 85% 75%, rgba(110, 71, 38, 0.12) 0%, transparent 48%)',
-        }}
-      />
-
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Back Navigation */}
-        <div className="mb-8 md:mb-10 flex items-center justify-between gap-4 border-b border-[#F2EFE9]/10 pb-4">
+    <div className="min-h-screen bg-[#1C1E21] text-[#F2EFE9] font-sans selection:bg-[#2B6592] selection:text-[#F2EFE9] pt-20 md:pt-28 pb-28 lg:pb-20 relative z-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Barra superior de regreso */}
+        <div className="mb-6 md:mb-8 flex items-center justify-between gap-4">
           <button
             type="button"
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-xs font-display uppercase tracking-[0.2em] text-[#C8C4BC] hover:text-[#F2EFE9] transition-colors cursor-pointer"
+            className="min-h-[44px] inline-flex items-center gap-2 text-sm font-medium text-[#D6D2CA] hover:text-[#F2EFE9] transition-colors cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4 text-[#6BA8D9]" />
-            <span>Volver a Esgrima Criolla</span>
+            <ArrowLeft className="w-4 h-4 text-[#78B7E8]" />
+            <span>Volver al inicio</span>
           </button>
 
-          <span className="hidden sm:inline-block font-display text-[0.68rem] uppercase tracking-[0.22em] text-[#9AA0A6]">
-            Maestro Jorge Prina · Formación Online
+          <span className="text-xs sm:text-sm font-medium text-[#B8B4AC]">
+            Maestro Jorge Prina
           </span>
         </div>
 
         {/* ============================================================
-            1. HERO / CABECERA DEL CURSO
+            1. CABECERA CLARA Y DIRECTA
            ============================================================ */}
-        <section className="pb-14 md:pb-20 border-b border-[#F2EFE9]/10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Copy Column */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45 }}
-              className="lg:col-span-6 flex flex-col items-start text-left"
+        <section className="pb-10 md:pb-14 border-b border-[#F2EFE9]/12">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-5"
+          >
+            <p className="text-sm font-semibold tracking-wide text-[#78B7E8]">
+              CURSO ONLINE • DESDE CERO
+            </p>
+
+            <h1
+              className="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.08] text-[#F2EFE9]"
+              style={{ textWrap: 'balance' }}
             >
-              <p className="font-display text-xs sm:text-[0.8rem] font-semibold uppercase tracking-[0.26em] text-[#6BA8D9] mb-4">
-                CURSO ONLINE • DESDE CERO
-              </p>
+              DE CERO A VISTEADOR
+            </h1>
 
-              <h1
-                className="font-display text-4xl sm:text-5xl lg:text-[3.5rem] font-bold uppercase tracking-[0.06em] leading-[1.04] text-[#F2EFE9] mb-5"
-                style={{ textWrap: 'balance' }}
-              >
-                DE CERO A VISTEADOR
-              </h1>
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed text-[#E4E0D8] max-w-2xl">
+              Aprendé el sistema completo de Esgrima Criolla con facón y poncho paso a paso desde tu casa, sin necesidad de experiencia previa.
+            </p>
 
-              <p className="font-serif text-base sm:text-lg leading-relaxed text-[#D8D3CA] mb-6 max-w-xl">
-                Aprendé el sistema completo de Esgrima Criolla con facón y poncho paso a paso desde tu casa, sin necesidad de experiencia previa.
-              </p>
-
-              <p className="font-display text-xs uppercase tracking-[0.18em] text-[#A8A39B] mb-8">
-                Dictado por el <span className="text-[#F2EFE9]">Maestro Jorge Prina</span> · 8 bloques completos · Acceso de por vida
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('inscripcion-visteador')}
-                  className="inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-[#2B6592] hover:bg-[#3475A8] active:scale-[0.99] text-[#F2EFE9] font-display text-sm font-bold uppercase tracking-[0.18em] rounded-sm border border-[#5DA3D9]/40 shadow-[0_12px_30px_rgba(43,101,146,0.32)] transition-all duration-200 cursor-pointer whitespace-nowrap"
-                >
-                  <span>Inscribirme al curso</span>
-                  <ArrowDown className="w-4 h-4" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => scrollToSection('temario-visteador')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-[#23262A] hover:bg-[#2B2F35] text-[#F2EFE9] font-display text-xs font-semibold uppercase tracking-[0.2em] rounded-sm border border-[#6E4726]/80 hover:border-[#8D5D34] transition-all duration-200 cursor-pointer whitespace-nowrap"
-                >
-                  <BookOpen className="w-4 h-4 text-[#C4966C]" />
-                  <span>Ver temario</span>
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Cover Image Column (16:9 prepared slot) */}
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.08 }}
-              className="lg:col-span-6 w-full"
-            >
-              <div className="relative rounded-sm overflow-hidden bg-[#23262A] border border-[#2B6592]/50 shadow-[0_24px_60px_rgba(0,0,0,0.45)]">
-                {/* Subtle Madera hairline accent on top edge */}
-                <div className="h-[2px] w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
-
-                <div className="relative aspect-video w-full overflow-hidden bg-[#181A1D]">
+            {/* Portada 16:9 */}
+            <div className="pt-2">
+              <div className="rounded-lg overflow-hidden bg-[#23262A] border border-[#2B6592]/60 shadow-[0_18px_45px_rgba(0,0,0,0.4)]">
+                <div className="relative aspect-video w-full bg-[#17191C]">
                   {hasCoverImage ? (
                     <img
                       src={COURSE_CONFIG.portadaImagen}
@@ -287,337 +178,269 @@ const CursoVisteador: React.FC<CursoVisteadorProps> = ({ onBack }) => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center p-6 sm:p-10 text-center relative">
-                      {/* Subtle technical framing lines */}
-                      <div className="absolute inset-4 border border-[#2B6592]/25 pointer-events-none" />
-                      <div className="absolute top-4 left-4 w-5 h-5 border-t-2 border-l-2 border-[#6E4726] pointer-events-none" />
-                      <div className="absolute top-4 right-4 w-5 h-5 border-t-2 border-r-2 border-[#6E4726] pointer-events-none" />
-                      <div className="absolute bottom-4 left-4 w-5 h-5 border-b-2 border-l-2 border-[#6E4726] pointer-events-none" />
-                      <div className="absolute bottom-4 right-4 w-5 h-5 border-b-2 border-r-2 border-[#6E4726] pointer-events-none" />
-
+                    <div className="w-full h-full flex flex-col items-center justify-center p-6 sm:p-10 text-center">
                       <img
                         src="https://i.imgur.com/cbCrHDB.png"
-                        alt="Emblema Academia de Esgrima Criolla"
+                        alt="Academia de Esgrima Criolla"
                         referrerPolicy="no-referrer"
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4 opacity-90"
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-4"
                       />
-
-                      <p className="font-display text-[0.7rem] uppercase tracking-[0.28em] text-[#6BA8D9] mb-1.5">
-                        Facón y Poncho · Sistema Completo
-                      </p>
-                      <p className="font-display text-xl sm:text-2xl font-bold uppercase tracking-[0.14em] text-[#F2EFE9] mb-1">
+                      <p className="font-display text-xl sm:text-2xl font-bold text-[#F2EFE9]">
                         De Cero a Visteador
                       </p>
-                      <p className="font-serif italic text-xs sm:text-sm text-[#B8B3AA]">
-                        Maestro Jorge Prina — Academia Buenas y Santas
+                      <p className="text-sm sm:text-base text-[#D0CCC4] mt-1">
+                        Esgrima Criolla con facón y poncho · Maestro Jorge Prina
                       </p>
                     </div>
                   )}
                 </div>
-
-                {/* Clean bottom info bar */}
-                <div className="px-4 sm:px-5 py-3 bg-[#23262A] border-t border-[#F2EFE9]/10 flex flex-wrap items-center justify-between gap-2 text-[0.72rem] font-display uppercase tracking-[0.16em] text-[#C8C4BC]">
-                  <span className="inline-flex items-center gap-1.5">
-                    <PlayCircle className="w-3.5 h-3.5 text-[#6BA8D9]" />
-                    Clases grabadas + Prácticas guiadas
-                  </span>
-                  <span className="text-[#C4966C]">+ Libro Digital de regalo</span>
-                </div>
               </div>
-            </motion.div>
-          </div>
+            </div>
 
-          {/* Sober 3-item summary strip */}
-          <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#23262A] border border-[#2B6592]/35 rounded-sm px-5 py-4">
-              <p className="font-display text-[0.68rem] uppercase tracking-[0.22em] text-[#6BA8D9] mb-1">
-                Nivel Inicial a Completo
-              </p>
-              <p className="font-serif text-sm text-[#E5E1D8]">
-                Pensado desde cero absoluto, paso a paso y entrenable en tu casa.
+            <div className="pt-2 flex flex-col sm:flex-row gap-3">
+              <button
+                type="button"
+                onClick={scrollToCheckout}
+                className="min-h-[54px] flex-1 sm:flex-none inline-flex items-center justify-center gap-2.5 px-7 py-3.5 bg-[#2B6592] hover:bg-[#3577AA] active:scale-[0.99] text-[#F2EFE9] font-display text-base font-semibold rounded-md transition-colors cursor-pointer shadow-[0_10px_28px_rgba(43,101,146,0.35)]"
+              >
+                <span>Quiero inscribirme al curso</span>
+                <ArrowDown className="w-4 h-4 shrink-0" />
+              </button>
+
+              <button
+                type="button"
+                onClick={scrollToRecorrido}
+                className="min-h-[54px] inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#23262A] hover:bg-[#2B2F35] text-[#F2EFE9] font-display text-base font-medium rounded-md border border-[#6E4726] transition-colors cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4 text-[#DFB285] shrink-0" />
+                <span>Ver recorrido</span>
+              </button>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ============================================================
+            2. ¿CÓMO FUNCIONA?
+           ============================================================ */}
+        <section className="py-10 md:py-14 border-b border-[#F2EFE9]/12">
+          <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9] mb-2">
+            ¿Cómo funciona este curso?
+          </h2>
+          <p className="text-base text-[#D6D2CA] mb-6 leading-relaxed">
+            Está pensado para que cualquier persona pueda aprender Esgrima Criolla desde cero, sin apuros y desde su casa.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#23262A] border border-[#2B6592]/45 rounded-lg p-5 space-y-2">
+              <div className="flex items-center gap-2.5 text-[#78B7E8]">
+                <PlayCircle className="w-5 h-5 shrink-0" />
+                <h3 className="font-display text-lg font-semibold text-[#F2EFE9]">
+                  Videos paso a paso
+                </h3>
+              </div>
+              <p className="text-[0.95rem] leading-relaxed text-[#DCD8D0]">
+                El Maestro Jorge Prina te explica cada guardia, corte, manejo del poncho y esquive con prácticas guiadas para entrenar solo en casa.
               </p>
             </div>
-            <div className="bg-[#23262A] border border-[#6E4726]/55 rounded-sm px-5 py-4">
-              <p className="font-display text-[0.68rem] uppercase tracking-[0.22em] text-[#C4966C] mb-1">
-                Método Tradicional + Práctica
-              </p>
-              <p className="font-serif text-sm text-[#E5E1D8]">
-                Facón, poncho, visteo, estrategia, legislación y primeros auxilios.
+
+            <div className="bg-[#23262A] border border-[#6E4726]/70 rounded-lg p-5 space-y-2">
+              <div className="flex items-center gap-2.5 text-[#DFB285]">
+                <Clock className="w-5 h-5 shrink-0" />
+                <h3 className="font-display text-lg font-semibold text-[#F2EFE9]">
+                  A tu ritmo, para siempre
+                </h3>
+              </div>
+              <p className="text-[0.95rem] leading-relaxed text-[#DCD8D0]">
+                No tiene horarios fijos ni vencimiento. Mirás las clases desde tu celular o computadora las veces que quieras.
               </p>
             </div>
-            <div className="bg-[#23262A] border border-[#2B6592]/35 rounded-sm px-5 py-4">
-              <p className="font-display text-[0.68rem] uppercase tracking-[0.22em] text-[#6BA8D9] mb-1">
-                Entrega Automática
-              </p>
-              <p className="font-serif text-sm text-[#E5E1D8]">
-                Recibís tu acceso al aula y el Libro Digital por email al acreditarse el pago.
+
+            <div className="bg-[#23262A] border border-[#2B6592]/45 rounded-lg p-5 space-y-2">
+              <div className="flex items-center gap-2.5 text-[#78B7E8]">
+                <Award className="w-5 h-5 shrink-0" />
+                <h3 className="font-display text-lg font-semibold text-[#F2EFE9]">
+                  Sin experiencia previa
+                </h3>
+              </div>
+              <p className="text-[0.95rem] leading-relaxed text-[#DCD8D0]">
+                Arrancás desde lo más básico: cómo armar tu equipo seguro en casa, cómo agarrar el facón y cómo moverte desde el primer día.
               </p>
             </div>
           </div>
         </section>
 
         {/* ============================================================
-            2. TEMARIO DEL CURSO (ACORDEÓN DESPLEGABLE)
+            3. RECORRIDO DEL CURSO (CONCISO Y FÁCIL DE LEER)
            ============================================================ */}
-        <section id="temario-visteador" className="py-14 md:py-20 border-b border-[#F2EFE9]/10 scroll-mt-24">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 md:mb-10">
-            <div>
-              <p className="font-display text-xs uppercase tracking-[0.24em] text-[#6BA8D9] mb-2">
-                Programa Completo · 8 Bloques
-              </p>
-              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-[0.08em] text-[#F2EFE9]">
-                Temario del Curso
-              </h2>
-            </div>
-
-            <button
-              type="button"
-              onClick={toggleAllModules}
-              className="self-start sm:self-auto font-display text-xs uppercase tracking-[0.18em] text-[#C8C4BC] hover:text-[#F2EFE9] border-b border-[#2B6592]/60 hover:border-[#6BA8D9] pb-1 transition-colors cursor-pointer"
-            >
-              {allExpanded ? 'Contraer todos los módulos' : 'Desplegar todo el temario'}
-            </button>
+        <section ref={recorridoRef} id="temario-visteador" className="py-10 md:py-14 border-b border-[#F2EFE9]/12 scroll-mt-24">
+          <div className="mb-6">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9]">
+              Recorrido del curso
+            </h2>
+            <p className="text-base text-[#D6D2CA] mt-1">
+              6 módulos progresivos con prácticas guiadas, introducción inicial y material bonus de regalo.
+            </p>
           </div>
 
-          <div className="space-y-3">
-            {CURRICULUM_MODULES.map((mod) => {
-              const isOpen = openModules.includes(mod.id);
-              const isBonus = Boolean(mod.isBonus);
-
-              return (
-                <div
-                  key={mod.id}
-                  className={`rounded-sm border transition-colors duration-200 overflow-hidden ${
-                    isBonus
-                      ? isOpen
-                        ? 'bg-[#262422] border-[#8D5D34]'
-                        : 'bg-[#232324] border-[#6E4726]/80 hover:border-[#8D5D34]'
-                      : isOpen
-                        ? 'bg-[#25292E] border-[#2B6592]'
-                        : 'bg-[#23262A] border-[#F2EFE9]/12 hover:border-[#2B6592]/60'
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {COURSE_BLOCKS.map((block) => (
+              <div
+                key={block.id}
+                className={`rounded-lg px-5 py-4 border ${
+                  block.isBonus
+                    ? 'bg-[#252321] border-[#6E4726]'
+                    : 'bg-[#23262A] border-[#F2EFE9]/12'
+                }`}
+              >
+                <p
+                  className={`text-xs sm:text-sm font-semibold mb-1 ${
+                    block.isBonus ? 'text-[#DFB285]' : 'text-[#78B7E8]'
                   }`}
                 >
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    onClick={() => toggleModule(mod.id)}
-                    className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left flex items-center justify-between gap-4 cursor-pointer"
-                  >
-                    <div className="flex items-start sm:items-center gap-3.5 sm:gap-5 min-w-0">
-                      <span
-                        className={`flex-shrink-0 font-display text-xs sm:text-sm font-bold tracking-[0.16em] uppercase tabular-nums pt-0.5 sm:pt-0 ${
-                          isBonus ? 'text-[#D4A373]' : 'text-[#6BA8D9]'
-                        }`}
-                      >
-                        {mod.code}
-                      </span>
-
-                      <div className="min-w-0">
-                        <h3 className="font-display text-base sm:text-lg font-semibold uppercase tracking-[0.06em] text-[#F2EFE9] leading-snug">
-                          {mod.title}
-                        </h3>
-                        {!isOpen && (
-                          <p className="font-serif text-xs sm:text-sm text-[#A8A39B] mt-1 line-clamp-1">
-                            {mod.summary}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div
-                      className={`flex-shrink-0 w-8 h-8 rounded-sm border flex items-center justify-center transition-transform duration-200 ${
-                        isBonus
-                          ? isOpen
-                            ? 'bg-[#6E4726] border-[#8D5D34] text-[#F2EFE9] rotate-180'
-                            : 'border-[#6E4726]/70 text-[#D4A373]'
-                          : isOpen
-                            ? 'bg-[#2B6592] border-[#2B6592] text-[#F2EFE9] rotate-180'
-                            : 'border-[#2B6592]/50 text-[#6BA8D9]'
-                      }`}
-                    >
-                      <ChevronDown className="w-4 h-4" />
-                    </div>
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.22, ease: 'easeInOut' }}
-                      >
-                        <div className="px-4 sm:px-6 pb-5 sm:pb-6 pt-3 border-t border-[#F2EFE9]/10">
-                          <p className="font-serif text-sm sm:text-[0.95rem] text-[#D8D3CA] leading-relaxed mb-4">
-                            {mod.summary}
-                          </p>
-
-                          <ul className="space-y-2.5">
-                            {mod.topics.map((topic, index) => (
-                              <li
-                                key={index}
-                                className="flex items-start gap-2.5 text-sm text-[#E5E1D8] font-serif leading-relaxed"
-                              >
-                                <CheckCircle2
-                                  className={`w-4 h-4 flex-shrink-0 mt-1 ${
-                                    isBonus ? 'text-[#C4966C]' : 'text-[#6BA8D9]'
-                                  }`}
-                                />
-                                <span>{topic}</span>
-                              </li>
-                            ))}
-                          </ul>
-
-                          {mod.highlightNote && (
-                            <div
-                              className={`mt-4 pt-3 border-t border-[#F2EFE9]/10 flex items-center gap-2 font-display text-xs uppercase tracking-[0.16em] ${
-                                isBonus ? 'text-[#D4A373]' : 'text-[#6BA8D9]'
-                              }`}
-                            >
-                              {isBonus ? (
-                                <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
-                              ) : (
-                                <Award className="w-3.5 h-3.5 flex-shrink-0" />
-                              )}
-                              <span>{mod.highlightNote}</span>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                  {block.label}
+                </p>
+                <h3 className="font-display text-base sm:text-lg font-semibold text-[#F2EFE9] leading-snug">
+                  {block.title}
+                </h3>
+              </div>
+            ))}
           </div>
         </section>
 
         {/* ============================================================
-            3. CAJA DE INSCRIPCIÓN Y PAGOS (SIN BACKEND)
+            4. CAJA DE INSCRIPCIÓN Y PAGOS (SIN BACKEND)
            ============================================================ */}
-        <section id="inscripcion-visteador" className="pt-14 md:pt-20 scroll-mt-24">
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-[#23262A] border border-[#2B6592]/70 rounded-sm overflow-hidden shadow-[0_24px_65px_rgba(0,0,0,0.5)]">
-              {/* Top structural Madera & Azul Patria strip */}
-              <div className="h-1 w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
+        <section ref={inscripcionRef} id="inscripcion-visteador" className="pt-10 md:pt-14 scroll-mt-24">
+          <div className="bg-[#23262A] border border-[#2B6592]/75 rounded-lg overflow-hidden shadow-[0_20px_55px_rgba(0,0,0,0.45)]">
+            <div className="h-1.5 w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
 
-              <div className="p-6 sm:p-8 md:p-10">
-                <div className="text-center mb-8">
-                  <p className="font-display text-xs uppercase tracking-[0.26em] text-[#6BA8D9] mb-2">
-                    Inscripción Online Inmediata
+            <div className="p-5 sm:p-8 md:p-10">
+              <div className="text-center mb-7">
+                <p className="text-sm font-semibold text-[#78B7E8] mb-1.5">
+                  Inscripción Online
+                </p>
+                <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[#F2EFE9] mb-2">
+                  Elegí cómo querés pagar
+                </h2>
+                <p className="text-base text-[#DCD8D0] max-w-xl mx-auto leading-relaxed">
+                  Un solo pago. Incluye el programa completo, prácticas guiadas, módulo bonus y el Libro Digital de regalo.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div className="bg-[#1C1E21] border border-[#2B6592]/60 rounded-lg p-5">
+                  <p className="text-sm font-semibold text-[#78B7E8]">
+                    Desde Argentina (Pesos)
                   </p>
-                  <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-[0.08em] text-[#F2EFE9] mb-3">
-                    De Cero a Visteador
-                  </h2>
-                  <p className="font-serif text-sm sm:text-base text-[#C8C4BC] max-w-xl mx-auto">
-                    Elegí tu medio de pago según tu país. Incluye los 6 módulos completos, Introducción, Módulo Bonus y el Libro Digital de regalo.
+                  <p className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9] tabular-nums mt-1.5">
+                    {COURSE_CONFIG.precioArs}
+                  </p>
+                  <p className="text-sm text-[#C8C4BC] mt-1">
+                    {COURSE_CONFIG.cuotasTexto}
                   </p>
                 </div>
 
-                {/* Pricing Overview Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                  {/* Argentina Pricing */}
-                  <div className="bg-[#1C1E21] border border-[#2B6592]/60 rounded-sm p-5 text-center sm:text-left">
-                    <div className="flex items-center justify-center sm:justify-between gap-2 mb-2">
-                      <span className="font-display text-xs font-bold uppercase tracking-[0.2em] text-[#6BA8D9]">
-                        Argentina (ARS)
-                      </span>
-                      <CreditCard className="w-4 h-4 text-[#6BA8D9] hidden sm:block" />
-                    </div>
-                    <p className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9] tracking-wide tabular-nums">
-                      {COURSE_CONFIG.precioArs}
-                    </p>
-                    <p className="font-serif text-xs sm:text-sm text-[#B8B3AA] mt-1">
-                      {COURSE_CONFIG.cuotasTexto}
-                    </p>
+                <div className="bg-[#1C1E21] border border-[#6E4726] rounded-lg p-5">
+                  <p className="text-sm font-semibold text-[#DFB285]">
+                    Desde el Exterior (Dólares)
+                  </p>
+                  <p className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9] tabular-nums mt-1.5">
+                    {COURSE_CONFIG.precioUsd}
+                  </p>
+                  <p className="text-sm text-[#C8C4BC] mt-1">
+                    Pago único internacional con PayPal o tarjeta
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-3.5">
+                <a
+                  href={COURSE_CONFIG.linkMercadoPago}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full min-h-[68px] flex items-center justify-between gap-4 px-5 sm:px-6 py-4 bg-[#2B6592] hover:bg-[#3577AA] active:scale-[0.995] text-[#F2EFE9] rounded-md border border-[#78B7E8]/40 shadow-[0_12px_30px_rgba(43,101,146,0.35)] transition-all"
+                >
+                  <div className="text-left">
+                    <span className="block font-display text-base sm:text-lg font-bold leading-snug">
+                      INSCRIBIRME DESDE ARGENTINA
+                    </span>
+                    <span className="block text-sm text-[#E8F2FA] mt-0.5">
+                      Pesos / Mercado Pago / Tarjetas
+                    </span>
                   </div>
+                  <ExternalLink className="w-5 h-5 flex-shrink-0 text-[#F2EFE9] group-hover:translate-x-0.5 transition-transform" />
+                </a>
 
-                  {/* Exterior Pricing */}
-                  <div className="bg-[#1C1E21] border border-[#6E4726]/75 rounded-sm p-5 text-center sm:text-left">
-                    <div className="flex items-center justify-center sm:justify-between gap-2 mb-2">
-                      <span className="font-display text-xs font-bold uppercase tracking-[0.2em] text-[#D4A373]">
-                        Exterior (USD)
-                      </span>
-                      <Globe className="w-4 h-4 text-[#D4A373] hidden sm:block" />
-                    </div>
-                    <p className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9] tracking-wide tabular-nums">
-                      {COURSE_CONFIG.precioUsd}
-                    </p>
-                    <p className="font-serif text-xs sm:text-sm text-[#B8B3AA] mt-1">
-                      Pago único internacional vía PayPal
-                    </p>
+                <a
+                  href={COURSE_CONFIG.linkPayPal}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group w-full min-h-[68px] flex items-center justify-between gap-4 px-5 sm:px-6 py-4 bg-[#1C1E21] hover:bg-[#2A2D32] active:scale-[0.995] text-[#F2EFE9] rounded-md border border-[#6E4726] hover:border-[#9E6B3E] transition-all"
+                >
+                  <div className="text-left">
+                    <span className="block font-display text-base sm:text-lg font-bold leading-snug text-[#F2EFE9]">
+                      INSCRIBIRME DESDE EL EXTERIOR
+                    </span>
+                    <span className="block text-sm text-[#D6D2CA] mt-0.5">
+                      USD / PayPal / Tarjeta Internacional
+                    </span>
                   </div>
-                </div>
+                  <ExternalLink className="w-5 h-5 flex-shrink-0 text-[#DFB285] group-hover:translate-x-0.5 transition-transform" />
+                </a>
+              </div>
 
-                {/* Two Big Differentiated Payment Buttons */}
-                <div className="space-y-4">
-                  {/* Botón 1: Argentina (Mercado Pago) */}
-                  <a
-                    href={COURSE_CONFIG.linkMercadoPago}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group w-full flex items-center justify-between gap-4 px-5 sm:px-7 py-4 sm:py-5 bg-[#2B6592] hover:bg-[#3475A8] active:scale-[0.995] text-[#F2EFE9] rounded-sm border border-[#6BA8D9]/45 shadow-[0_12px_32px_rgba(43,101,146,0.35)] transition-all duration-200"
-                  >
-                    <div className="flex flex-col text-left">
-                      <span className="font-display text-sm sm:text-base font-bold uppercase tracking-[0.12em] leading-snug">
-                        INSCRIBIRME DESDE ARGENTINA
-                      </span>
-                      <span className="font-serif text-xs sm:text-sm text-[#E5EFF7]/90 mt-0.5">
-                        Pesos / Mercado Pago / Tarjetas
-                      </span>
-                    </div>
-                    <ExternalLink className="w-5 h-5 flex-shrink-0 text-[#F2EFE9] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
-
-                  {/* Botón 2: Exterior (PayPal) */}
-                  <a
-                    href={COURSE_CONFIG.linkPayPal}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group w-full flex items-center justify-between gap-4 px-5 sm:px-7 py-4 sm:py-5 bg-[#1C1E21] hover:bg-[#2A2D32] active:scale-[0.995] text-[#F2EFE9] rounded-sm border border-[#6E4726] hover:border-[#9E6B3E] transition-all duration-200"
-                  >
-                    <div className="flex flex-col text-left">
-                      <span className="font-display text-sm sm:text-base font-bold uppercase tracking-[0.12em] leading-snug text-[#F2EFE9]">
-                        INSCRIBIRME DESDE EL EXTERIOR
-                      </span>
-                      <span className="font-serif text-xs sm:text-sm text-[#C8C4BC] mt-0.5">
-                        USD / PayPal / Tarjeta Internacional
-                      </span>
-                    </div>
-                    <ExternalLink className="w-5 h-5 flex-shrink-0 text-[#D4A373] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
-                </div>
-
-                {/* Required Access Note */}
-                <div className="mt-6 pt-5 border-t border-[#F2EFE9]/10 text-center space-y-3">
-                  <p className="font-serif text-sm sm:text-[0.95rem] text-[#E5E1D8] flex items-center justify-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#6BA8D9] flex-shrink-0" />
-                    <span>Acceso automático por email al acreditarse el pago. Acceso de por vida.</span>
-                  </p>
-
-                  <p className="font-serif text-xs text-[#A8A39B]">
-                    ¿Tenés alguna consulta antes de inscribirte?{' '}
-                    <a
-                      href={COURSE_CONFIG.linkWhatsappSoporte}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#6BA8D9] hover:text-[#8DC2EA] underline underline-offset-4 transition-colors"
-                    >
-                      Escribinos por WhatsApp
-                    </a>
-                  </p>
-                </div>
+              <div className="mt-6 pt-5 border-t border-[#F2EFE9]/12 text-center">
+                <p className="text-sm sm:text-base font-medium text-[#F2EFE9] flex items-center justify-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-[#78B7E8] flex-shrink-0" />
+                  <span>Acceso automático por email al acreditarse el pago. Acceso de por vida.</span>
+                </p>
               </div>
             </div>
           </div>
         </section>
       </div>
+
+      {/* ============================================================
+          BARRA FIJA MÓVIL (DESAPARECE SOLA AL LLEGAR AL PAGO)
+         ============================================================ */}
+      <AnimatePresence>
+        {!isCheckoutVisible && (
+          <motion.div
+            key="mobile-course-sticky-cta"
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#181A1D]/96 backdrop-blur-md border-t border-[#2B6592]/60 px-4 py-3 shadow-[0_-10px_30px_rgba(0,0,0,0.65)]"
+            style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+          >
+            <div className="max-w-xl mx-auto flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-display text-sm font-bold text-[#F2EFE9] truncate">
+                  De Cero a Visteador
+                </p>
+                <p className="text-xs text-[#C8C4BC] truncate">
+                  Curso online · Acceso de por vida
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={scrollToCheckout}
+                className="min-h-[44px] px-5 py-2.5 bg-[#2B6592] hover:bg-[#3577AA] text-[#F2EFE9] font-display text-sm font-semibold rounded-md transition-colors shrink-0 cursor-pointer whitespace-nowrap"
+              >
+                Inscribirme
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
 
 // ============================================================================
-// 4. PANTALLA / MODAL DE CONFIRMACIÓN DE PAGO (?pago=aprobado)
+// PANTALLA / MODAL DE CONFIRMACIÓN DE PAGO (?pago=aprobado)
 // ============================================================================
 interface PaymentApprovedModalProps {
   isOpen: boolean;
@@ -645,54 +468,58 @@ export const PaymentApprovedModal: React.FC<PaymentApprovedModalProps> = ({ isOp
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[120] bg-[#121417]/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+          className="fixed inset-0 z-[120] bg-[#121417]/90 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-labelledby="payment-approved-title"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 12 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-xl bg-[#23262A] border border-[#2B6592]/75 rounded-sm shadow-[0_30px_80px_rgba(0,0,0,0.65)] overflow-hidden text-[#F2EFE9]"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-xl max-h-[92dvh] overflow-y-auto bg-[#23262A] border-t sm:border border-[#2B6592]/75 rounded-t-2xl sm:rounded-lg shadow-[0_30px_80px_rgba(0,0,0,0.65)] text-[#F2EFE9] font-sans"
+            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           >
-            {/* Top accent bar */}
-            <div className="h-1 w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
+            <div className="sm:hidden pt-3 pb-1 flex justify-center">
+              <div className="w-10 h-1 bg-[#F2EFE9]/25 rounded-full" />
+            </div>
+
+            <div className="hidden sm:block h-1.5 w-full bg-gradient-to-r from-[#2B6592] via-[#6E4726] to-[#2B6592]" />
 
             <button
               type="button"
               onClick={onClose}
               aria-label="Cerrar confirmación"
-              className="absolute top-4 right-4 p-2 text-[#A8A39B] hover:text-[#F2EFE9] transition-colors cursor-pointer"
+              className="absolute top-3 right-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#C8C4BC] hover:text-[#F2EFE9] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="p-6 sm:p-9 text-center">
-              <div className="w-14 h-14 mx-auto mb-5 rounded-sm bg-[#2B6592]/20 border border-[#2B6592]/70 flex items-center justify-center">
-                <CheckCircle2 className="w-8 h-8 text-[#6BA8D9]" />
+              <div className="w-14 h-14 mx-auto mb-5 rounded-lg bg-[#2B6592]/20 border border-[#2B6592]/70 flex items-center justify-center">
+                <CheckCircle2 className="w-8 h-8 text-[#78B7E8]" />
               </div>
 
-              <p className="font-display text-xs uppercase tracking-[0.26em] text-[#6BA8D9] mb-2">
-                Pago Aprobado · De Cero a Visteador
+              <p className="text-sm font-semibold text-[#78B7E8] mb-2">
+                Pago aprobado
               </p>
 
               <h2
                 id="payment-approved-title"
-                className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-[0.06em] text-[#F2EFE9] leading-tight mb-4"
+                className="font-display text-2xl sm:text-3xl font-bold text-[#F2EFE9] leading-tight mb-4"
                 style={{ textWrap: 'balance' }}
               >
                 ¡Inscripción confirmada! Bienvenido a De Cero a Visteador.
               </h2>
 
-              <p className="font-serif text-sm sm:text-base text-[#D8D3CA] leading-relaxed mb-5">
+              <p className="text-base text-[#E4E0D8] leading-relaxed mb-5">
                 En los próximos 2 minutos vas a recibir un correo automático con tu acceso al aula y el Libro Digital (revisá también las carpetas de Spam o Promociones).
               </p>
 
-              <div className="bg-[#1C1E21] border border-[#6E4726]/85 rounded-sm px-4 py-3.5 mb-7 flex items-center justify-center gap-2.5 text-left sm:text-center">
-                <Mail className="w-4 h-4 text-[#D4A373] flex-shrink-0" />
-                <p className="font-display text-xs sm:text-sm uppercase tracking-[0.1em] text-[#F2EFE9]">
+              <div className="bg-[#1C1E21] border border-[#6E4726] rounded-md px-4 py-3.5 mb-6 flex items-center justify-center gap-2.5 text-left sm:text-center">
+                <Mail className="w-5 h-5 text-[#DFB285] flex-shrink-0" />
+                <p className="text-sm sm:text-base font-semibold text-[#F2EFE9]">
                   Importante: ingresá al aula desde una cuenta de Gmail.
                 </p>
               </div>
@@ -702,16 +529,16 @@ export const PaymentApprovedModal: React.FC<PaymentApprovedModalProps> = ({ isOp
                   href={COURSE_CONFIG.linkWhatsappSoporte}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-4 bg-[#2B6592] hover:bg-[#3475A8] text-[#F2EFE9] font-display text-xs sm:text-sm font-bold uppercase tracking-[0.12em] rounded-sm border border-[#6BA8D9]/45 transition-colors"
+                  className="w-full min-h-[54px] inline-flex items-center justify-center gap-2.5 px-5 py-3.5 bg-[#2B6592] hover:bg-[#3577AA] text-[#F2EFE9] font-display text-sm sm:text-base font-semibold rounded-md transition-colors leading-snug"
                 >
-                  <MessageCircle className="w-4 h-4 flex-shrink-0" />
+                  <MessageCircle className="w-5 h-5 flex-shrink-0" />
                   <span>¿No te llegó el mail o pagaste con otro correo? Escribinos por WhatsApp</span>
                 </a>
 
                 <button
                   type="button"
                   onClick={onClose}
-                  className="w-full py-3 font-display text-xs uppercase tracking-[0.2em] text-[#A8A39B] hover:text-[#F2EFE9] transition-colors cursor-pointer"
+                  className="w-full min-h-[44px] py-2.5 text-sm font-medium text-[#C8C4BC] hover:text-[#F2EFE9] transition-colors cursor-pointer"
                 >
                   Cerrar aviso
                 </button>

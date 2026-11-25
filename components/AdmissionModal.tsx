@@ -141,7 +141,7 @@ const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -150,17 +150,19 @@ const AdmissionModal: React.FC<AdmissionModalProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
       <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        initial={{ scale: 0.98, opacity: 0, y: 24 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        className="relative w-full max-w-5xl max-h-[90vh] bg-void border border-gold/30 shadow-[0_0_60px_rgba(0,0,0,0.9)] flex flex-col md:flex-row overflow-hidden rounded-sm z-10"
+        exit={{ scale: 0.98, opacity: 0, y: 24 }}
+        className="relative w-full max-w-5xl max-h-[92dvh] sm:max-h-[90vh] bg-void border-t sm:border border-gold/30 shadow-[0_0_60px_rgba(0,0,0,0.9)] flex flex-col md:flex-row overflow-hidden rounded-t-2xl sm:rounded-sm z-10"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-30 w-9 h-9 rounded-sm bg-void/80 border border-gold/30 text-stone-300 hover:text-gold hover:border-gold flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute top-3 right-3 z-30 min-w-[44px] min-h-[44px] rounded-sm bg-void/90 border border-gold/30 text-stone-200 hover:text-gold hover:border-gold flex items-center justify-center transition-colors cursor-pointer"
           aria-label="Cerrar"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
 
         {/* Left Side: Branding & Trial Class Offer */}

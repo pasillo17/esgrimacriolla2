@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
 
 const CLASES = [
@@ -30,7 +31,7 @@ const CLASES = [
   {
     id: '04',
     title: 'Acondicionamiento Físico',
-    description: 'Preparación física orientada al combate y resistencia.',
+    description: 'Preparación física orientada al combate y la resistencia.',
     icon: 'fitness_center',
     image: 'https://i.imgur.com/0xAYDbQ.jpeg',
     classNameDesktop: 'md:col-span-4 md:row-span-2',
@@ -39,98 +40,136 @@ const CLASES = [
 
 const ClasesGrid: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPaused, setIsAutoPaused] = useState(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (window.innerWidth < 768) {
+    if (isAutoPaused) return;
+    let timer: ReturnType<typeof setInterval> | undefined;
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
       timer = setInterval(() => {
         setCurrentSlide((prev) => (prev + 1) % CLASES.length);
-      }, 4000);
+      }, 4500);
     }
     return () => {
       if (timer) clearInterval(timer);
     };
-  }, []);
+  }, [isAutoPaused]);
+
+  const goToSlide = (index: number) => {
+    setIsAutoPaused(true);
+    setCurrentSlide((index + CLASES.length) % CLASES.length);
+  };
 
   return (
     <>
-      {/* MOBILE LAYOUT (CAROUSEL) */}
-      <div className="md:hidden relative h-[450px] w-full overflow-hidden rounded-sm border border-gold/20">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 h-full w-full"
-          >
-            <div className="group relative h-full w-full overflow-hidden bg-black flex flex-col justify-end p-8">
-              <div className="absolute inset-0 z-0">
-                <img
-                  src={CLASES[currentSlide].image}
-                  alt={CLASES[currentSlide].title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover filter sepia-[0.2] contrast-125 opacity-40 transition-all duration-1000"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent"></div>
+      {/* MOBILE LAYOUT (TOUCH-INTERACTIVE CAROUSEL) */}
+      <div className="md:hidden space-y-3">
+        <div className="relative h-[420px] w-full overflow-hidden rounded-md border border-gold/25">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentSlide}
+              initial={{ opacity: 0, x: 32 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -32 }}
+              transition={{ duration: 0.35 }}
+              className="absolute inset-0 h-full w-full"
+            >
+              <div className="group relative h-full w-full overflow-hidden bg-black flex flex-col justify-end p-6 pb-8">
+                <div className="absolute inset-0 z-0">
+                  <img
+                    src={CLASES[currentSlide].image}
+                    alt={CLASES[currentSlide].title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover filter sepia-[0.15] contrast-115 opacity-50 transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-transparent"></div>
+                </div>
+                <div className="relative z-10 pr-2">
+                  <span className="material-icons-outlined text-gold text-3xl mb-3 block">
+                    {CLASES[currentSlide].icon}
+                  </span>
+                  <h3 className="font-display text-white text-2xl font-bold tracking-tight leading-snug mb-2">
+                    {CLASES[currentSlide].title}
+                  </h3>
+                  <p className="text-stone-200 text-sm font-sans leading-relaxed">
+                    {CLASES[currentSlide].description}
+                  </p>
+                </div>
+                <div className="absolute top-5 right-5 text-gold/30 font-display font-bold text-4xl select-none tabular-nums">
+                  {CLASES[currentSlide].id}
+                </div>
               </div>
-              <div className="relative z-10">
-                <span className="material-icons-outlined text-gold text-3xl mb-4 block">
-                  {CLASES[currentSlide].icon}
-                </span>
-                <h3 className="font-display text-white text-2xl uppercase tracking-[0.2em] mb-3">
-                  {CLASES[currentSlide].title}
-                </h3>
-                <p className="text-stone-300 text-sm font-serif italic leading-relaxed">
-                  {CLASES[currentSlide].description}
-                </p>
-              </div>
-              <div className="absolute top-6 right-6 text-gold/20 font-display text-5xl select-none">
-                {CLASES[currentSlide].id}
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-        {/* Indicators */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
-          {CLASES.map((_, idx) => (
-            <div
-              key={idx}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                currentSlide === idx ? 'bg-gold w-6' : 'bg-gold/30'
-              }`}
-            />
-          ))}
+        {/* Ergonomic Touch Controls Row */}
+        <div className="flex items-center justify-between gap-2">
+          <button
+            type="button"
+            onClick={() => goToSlide(currentSlide - 1)}
+            aria-label="Clase anterior"
+            className="min-w-[44px] min-h-[44px] rounded-md bg-void border border-gold/30 text-gold flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex items-center gap-1.5 flex-1 justify-center">
+            {CLASES.map((clase, idx) => (
+              <button
+                key={clase.id}
+                type="button"
+                onClick={() => goToSlide(idx)}
+                aria-label={`Ver ${clase.title}`}
+                className={`min-h-[44px] min-w-[44px] px-2 font-display text-xs font-bold rounded-md border transition-colors cursor-pointer tabular-nums ${
+                  currentSlide === idx
+                    ? 'bg-gold text-void border-gold'
+                    : 'bg-void/70 text-stone-300 border-gold/20 hover:text-gold'
+                }`}
+              >
+                {clase.id}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => goToSlide(currentSlide + 1)}
+            aria-label="Siguiente clase"
+            className="min-w-[44px] min-h-[44px] rounded-md bg-void border border-gold/30 text-gold flex items-center justify-center active:scale-95 transition-transform cursor-pointer"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
       {/* DESKTOP LAYOUT (BENTO GRID) */}
-      <div className="hidden md:grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 h-auto md:h-[900px]">
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-7 h-auto md:h-[820px]">
         {CLASES.map((clase, idx) => (
           <div key={clase.id} className={clase.classNameDesktop}>
             <RevealOnScroll direction={idx % 2 === 0 ? 'left' : 'right'} className="h-full">
-              <div className="group relative h-full min-h-[300px] overflow-hidden border border-gold/15 rounded-sm bg-black flex flex-col justify-end p-10 hover:border-gold/50 transition-all duration-700">
+              <div className="group relative h-full min-h-[300px] overflow-hidden border border-gold/15 rounded-md bg-black flex flex-col justify-end p-6 lg:p-8 hover:border-gold/50 transition-all duration-500">
                 <div className="absolute inset-0 z-0">
                   <img
                     src={clase.image}
                     alt={clase.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover filter sepia-[0.2] contrast-125 opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-1000"
+                    className="w-full h-full object-cover filter sepia-[0.15] contrast-115 opacity-45 group-hover:opacity-65 group-hover:scale-105 transition-all duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent"></div>
                 </div>
-                <div className="relative z-10 max-w-lg">
-                  <span className="material-icons-outlined text-gold text-4xl mb-6 block">{clase.icon}</span>
-                  <h3 className="font-display text-white text-2xl lg:text-3xl uppercase tracking-[0.2em] mb-4">
+                <div className="relative z-10 w-full max-w-lg">
+                  <span className="material-icons-outlined text-gold text-3xl lg:text-4xl mb-4 block">
+                    {clase.icon}
+                  </span>
+                  <h3 className="font-display text-white text-xl lg:text-2xl xl:text-[1.65rem] font-bold tracking-tight leading-tight mb-2.5">
                     {clase.title}
                   </h3>
-                  <p className="text-stone-400 text-sm lg:text-base font-serif italic leading-relaxed opacity-80 group-hover:opacity-100 transition-all duration-500">
+                  <p className="text-stone-200 text-sm lg:text-[0.95rem] font-sans leading-relaxed">
                     {clase.description}
                   </p>
                 </div>
-                <div className="absolute top-8 right-10 text-gold/20 font-display text-6xl lg:text-8xl select-none">
+                <div className="absolute top-5 right-6 text-gold/25 font-display font-bold text-5xl lg:text-7xl select-none tabular-nums">
                   {clase.id}
                 </div>
               </div>

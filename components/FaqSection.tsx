@@ -11,10 +11,10 @@ const FAQS = [
     tag: 'Iniciación desde cero'
   },
   {
-    question: '¿Tengo que comprar facón, poncho o equipo antes de mi primera clase?',
+    question: '¿Tengo que comprar facón, poncho o equipo para entrenar?',
     answer:
-      'No tenés que comprar nada para empezar. Tu primera clase de prueba incluye todo el equipo de entrenamiento prestado por la academia (facones de madera y aluminio templado sin filo y elementos de guardia). Solo tenés que asistir con ropa cómoda deportiva.',
-    tag: 'Equipo prestado incluido'
+      'No tenés que comprar nada. En todas las clases la academia te entrega todo el material de entrenamiento (poncho y cuchillos de práctica sin filo). Solo tenés que traer ganas de aprender y ropa cómoda.',
+    tag: 'Material incluido en todas las clases'
   },
   {
     question: '¿Es peligroso el entrenamiento? ¿Cómo se cuida la integridad física?',
@@ -52,7 +52,7 @@ const FaqSection: React.FC = () => {
           <div className="flex flex-col items-center text-center mb-10 md:mb-14">
             <div className="inline-flex items-center gap-2 text-gold font-display text-xs sm:text-sm tracking-wide font-semibold mb-3">
               <ShieldCheck className="w-4 h-4 text-gold shrink-0" />
-              <span>Empezá sin dudas · 1° clase con equipo prestado</span>
+              <span>Empezá sin dudas · Material incluido en todas las clases</span>
             </div>
 
             <h2 className="font-display text-3xl sm:text-5xl font-bold text-stone-100 tracking-tight mb-3">
@@ -132,7 +132,7 @@ const FaqSection: React.FC = () => {
                   ¿Listo para dar el primer paso?
                 </h3>
                 <p className="font-sans text-stone-200 text-sm sm:text-base leading-relaxed">
-                  Vení a probar tu primera clase sin necesidad de experiencia ni equipo propio. Nosotros te prestamos todo para entrenar.
+                  En todas las clases te entregamos poncho y cuchillos de entrenamiento. No necesitás experiencia previa: solo traé ganas y ropa cómoda.
                 </p>
               </div>
 

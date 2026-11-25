@@ -120,14 +120,14 @@ const Sedes: React.FC<SedesProps> = ({ onBack }) => {
               Nuestras Sedes
             </h2>
 
-            {/* Clean Trial Class Note (No GPS) */}
+            {/* Clean Included Equipment Note */}
             <div className="w-full max-w-3xl bg-card-depth border border-gold/25 p-5 sm:p-6 rounded-md shadow-xl text-center">
               <div className="inline-flex items-center justify-center gap-2 text-gold font-display text-sm font-semibold mb-1.5">
                 <ShieldCheck className="w-4 h-4 shrink-0" />
-                <span>1° Clase de prueba con equipo prestado incluido</span>
+                <span>Material de entrenamiento incluido en todas las clases</span>
               </div>
               <p className="font-sans text-stone-200 text-sm sm:text-base leading-relaxed">
-                No necesitás experiencia previa ni facón propio. Vení con ropa cómoda deportiva: nosotros te prestamos todo el equipo de entrenamiento.
+                En cada clase te entregamos poncho y cuchillos de entrenamiento. No necesitás experiencia previa ni comprar equipo: solo tenés que traer ganas y ropa cómoda.
               </p>
             </div>
           </div>

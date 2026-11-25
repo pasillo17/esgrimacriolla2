@@ -435,7 +435,7 @@ const App: React.FC = () => {
                           </div>
 
                           <p className="text-sm font-sans text-stone-200 leading-relaxed pt-4 border-t border-gold/15">
-                            <span className="text-gold font-semibold">Primera clase con equipo prestado incluido.</span> No necesitás experiencia previa ni facón propio; solo vení con ropa cómoda.
+                            <span className="text-gold font-semibold">Material incluido en todas las clases.</span> Siempre te entregamos poncho y cuchillos de entrenamiento; solo tenés que traer ganas y ropa cómoda.
                           </p>
                         </div>
 
